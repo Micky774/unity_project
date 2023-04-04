@@ -23,7 +23,7 @@ public class RoboScript : MonoBehaviour
         float time_step = time_scale * Time.deltaTime;
 
         // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = Vector2.up * Input.GetAxisRaw("Vertical") + Vector2.right * Input.GetAxisRaw("Horizontal");
+        Vector2 acceleration = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
         acceleration = acceleration.normalized;
 
         // Updates speed based on move_strength, independant of decay_rate
