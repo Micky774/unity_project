@@ -3,17 +3,19 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Time
+  - Wall
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Ignore Collision
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Projectiles
+  - Walls
+  - Enemies
   - 
   - 
   - 

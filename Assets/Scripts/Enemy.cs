@@ -9,7 +9,6 @@ public class Enemy : MonoBehaviour
     private SpriteRenderer mySprite;
     public Rigidbody2D player;
     // Start is called before the first frame update
-    public TimeManager my_time;
     public float max_speed = 4;
     public float acceleration_rate = 1;
     private void Awake(){
@@ -19,14 +18,14 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        my_time = GameObject.FindGameObjectWithTag("Time").GetComponent<TimeManager>();
+        Debug.Log($"Enemy is on layer {gameObject.layer}");
     }
 
     // Update is called once per frame
     void Update()
     {
         // Used to normalize updates across various frame-rates
-        float time_step = my_time.GetTimeStep();
+        float time_step = Time.fixedDeltaTime;
 
         // Constructs a unit-vector along one of the eight digital directions
         Vector2 acceleration = player.position - myRigidbody.position;
