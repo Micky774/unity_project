@@ -12,7 +12,8 @@ public class FieldOfView : MonoBehaviour
     public List<Transform> visibleTargets = new List<Transform>();
 
     void Start(){
-        StartCoroutine("FindTargetsWithDelay", 1f);
+        StartCoroutine("FindTargetsWithDelay", .1f);
+
     }
     private IEnumerator FindTargetsWithDelay(float delay){
         while(true){
@@ -22,22 +23,19 @@ public class FieldOfView : MonoBehaviour
     }
     void FindVisibleTargets(){
         visibleTargets.Clear();
-        Debug.DrawRay(transform.position, Vector2.up * (viewRadius + 5));
-        Debug.DrawRay(transform.position, Vector2.down * (viewRadius + 5));
-        Debug.DrawRay(transform.position, Vector2.left * (viewRadius + 5));
-        Debug.DrawRay(transform.position, Vector2.right * (viewRadius + 5));
-        Collider[] targetsInViewRadius = Physics.OverlapSphere(transform.position, viewRadius);
-        Debug.Log($"Finding targets in layermask {targetMask.ToString()}; {targetsInViewRadius.Length} targets within radius");
+        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        foreach(Collider targetCollider in targetsInViewRadius){
+        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask);
+        foreach(Collider2D targetCollider in targetsInViewRadius){
             Transform target = targetCollider.transform;
             Vector2 dirToTarget = (target.position - transform.position).normalized;
-            Debug.DrawLine(transform.position, target.position);
-            float smallestAngle = Vector2.Angle((Vector2)transform.position, dirToTarget);
+
+            // TODO: Generalize gaze direction to be on mouse cursor
+            float smallestAngle = Vector2.Angle(cursorPosition - transform.position, dirToTarget);
             if(smallestAngle < viewAngle/2){
                 float distToTarget = Vector2.Distance(transform.position, target.position);
-                Debug.DrawRay(transform.position, dirToTarget * distToTarget);
-                if(!Physics.Raycast(transform.position, dirToTarget, distToTarget, wallMask)){
+                RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, wallMask);
+                if(hit.collider == null){
                     visibleTargets.Add(target);
                 }
             }

@@ -20,6 +20,8 @@ public class Robo : MonoBehaviour
     private SpriteRenderer _sprite;
     private Rigidbody2D _rigidbody;
     private float _projectile_spawn_dist = 3;
+    private Vector3 _cursor;
+    private Quaternion _orientation;
     // Start is called before the first frame update
     void Start()
     {        
@@ -66,6 +68,10 @@ public class Robo : MonoBehaviour
             max_speed
         );
     }
+    void Update(){
+        _cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
+    }
     Vector2 CalcDelayVector(){
         Vector2 my_vel = _rigidbody.velocity;
 
@@ -76,24 +82,17 @@ public class Robo : MonoBehaviour
     }
     void FireDuncan(InputAction.CallbackContext ctx){
         // Grab point of cursor at this exact time
-        Vector2 target = (Vector2) Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 displacement = target - _rigidbody.position;
+        Vector2 displacement = _cursor - transform.position;
         
         // Spawn projetile in the direction of the target
         GameObject created_duncan = Instantiate(
             duncan,
             _rigidbody.position + displacement.normalized * _projectile_spawn_dist,
-            GetDuncanRotation(displacement)
+            _orientation
         );
 
         // Set velocity based on projectiles' prescribed speed
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
-    }
-    Quaternion GetDuncanRotation(Vector2 displacement){
-        float angle = Mathf.Atan(displacement.x / displacement.y);
-        float offset = displacement.y > 0 ? Mathf.PI : 0;
-        float world_angle = (offset - angle) * Mathf.Rad2Deg;
-        return Quaternion.Euler(new Vector3(0, 0, world_angle));       
     }
 }
