@@ -21,7 +21,6 @@ public class Enemy : MonoBehaviour
     {
 		curr_health = max_health;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        Debug.Log($"Enemy is on layer {gameObject.layer}");
     }
 
     // Update is called once per frame
