@@ -18,7 +18,6 @@ public class Enemy : MonoBehaviour
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        Debug.Log($"Enemy is on layer {gameObject.layer}");
     }
 
     // Update is called once per frame
