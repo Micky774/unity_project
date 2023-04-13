@@ -14,8 +14,8 @@ public class Duncan : MonoBehaviour
             Destroy(gameObject);
         }
 		else if(hit_object.tag == "Enemy"){
-			Destroy(gameObject);
 			hit_object.GetComponent<Enemy>().TakeDamage(damage);
+			Destroy(gameObject);
 		}
     }
 }
