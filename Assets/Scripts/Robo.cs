@@ -26,6 +26,8 @@ public class Robo : MonoBehaviour
     private Vector3 _cursor;
     private Quaternion _orientation;
     // Start is called before the first frame update
+    [SerializeField]
+    private GameObject projectileParent;
     void Start()
     {        
         gameObject.name = "His Robotness";
@@ -93,7 +95,7 @@ public class Robo : MonoBehaviour
             _rigidbody.position + displacement.normalized * _projectile_spawn_dist,
             _orientation
         );
-
+        created_duncan.transform.parent = projectileParent.transform;
         // Set velocity based on projectiles' prescribed speed
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
