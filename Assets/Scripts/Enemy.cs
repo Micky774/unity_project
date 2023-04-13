@@ -13,6 +13,8 @@ public class Enemy : MonoBehaviour
     public float acceleration_rate = 1;
 	public float max_health = 100;
 	public float curr_health;
+	public int damage = 1;
+		
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
@@ -41,5 +43,13 @@ public class Enemy : MonoBehaviour
 		if(curr_health <= 0){
 			Destroy(gameObject);
 		}
+	}	
+	
+	void OnCollisionEnter2D(Collision2D collision) {
+		ContactPoint2D contact = collision.contacts[0];
+		GameObject hit_object = contact.collider.gameObject;
+        if(hit_object.tag == "Player"){
+            hit_object.GetComponent<Robo>().TakeDamage(damage);
+        }
 	}
 }

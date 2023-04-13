@@ -14,8 +14,9 @@ public class Robo : MonoBehaviour
     public float move_strength = 40;
     public float max_speed = 12;
     public float decay_rate = 25;
-	public float curr_health;
-	public float max_health = 100;
+	public float invincibility_duration_seconds = 1.5f;
+	public int curr_health;
+	public int max_health = 5;
 	public HealthBar health_bar;
 
     private InputAction _move_action;
@@ -25,9 +26,12 @@ public class Robo : MonoBehaviour
     private float _projectile_spawn_dist = 3;
     private Vector3 _cursor;
     private Quaternion _orientation;
+	private bool _invincible = false;
+	
     // Start is called before the first frame update
     [SerializeField]
     private GameObject projectileParent;
+
     void Start()
     {        
         gameObject.name = "His Robotness";
@@ -77,6 +81,17 @@ public class Robo : MonoBehaviour
         _cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
     }
+	
+	//Gives player invinicibility frames
+	private IEnumerator Iframes()
+	{
+		_invincible = true;
+		
+		yield return new WaitForSeconds(invincibility_duration_seconds);
+		
+		_invincible = false;
+	}
+	
     Vector2 CalcDelayVector(){
         Vector2 my_vel = _rigidbody.velocity;
 
@@ -101,8 +116,13 @@ public class Robo : MonoBehaviour
         return;
     }
 	
-	public void TakeDamage(float damage){
-		curr_health -= damage;
+	public void TakeDamage(int damage){
+		//Player takes no damage if in invincibility frames
+		if(_invincible) {
+			return;
+		}
+		curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
 		health_bar.UpdateHealthBar();
+		StartCoroutine(Iframes());
 	}
 }

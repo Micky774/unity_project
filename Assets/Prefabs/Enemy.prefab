@@ -151,3 +151,4 @@ MonoBehaviour:
   acceleration_rate: 1
   max_health: 100
   curr_health: 0
+  damage: 1
