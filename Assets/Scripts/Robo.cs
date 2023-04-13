@@ -90,9 +90,9 @@ public class Robo : MonoBehaviour
         GameObject created_duncan = Instantiate(
             duncan,
             _rigidbody.position + displacement.normalized * _projectile_spawn_dist,
-            _orientation
+            _orientation,
+            projectileParent.transform
         );
-        created_duncan.transform.parent = projectileParent.transform;
         // Set velocity based on projectiles' prescribed speed
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
