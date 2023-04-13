@@ -11,12 +11,15 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     public float max_speed = 4;
     public float acceleration_rate = 1;
+	public float max_health = 100;
+	public float curr_health;
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
+		curr_health = max_health;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
         Debug.Log($"Enemy is on layer {gameObject.layer}");
     }
@@ -33,4 +36,11 @@ public class Enemy : MonoBehaviour
         acceleration *= time_step * acceleration_rate / acceleration.magnitude;
         myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
     }
+	
+	public void TakeDamage(float damage) {
+		curr_health -= damage;
+		if(curr_health <= 0){
+			Destroy(gameObject);
+		}
+	}
 }

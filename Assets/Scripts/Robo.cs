@@ -14,6 +14,9 @@ public class Robo : MonoBehaviour
     public float move_strength = 40;
     public float max_speed = 12;
     public float decay_rate = 25;
+	public float curr_health;
+	public float max_health = 100;
+	public HealthBar health_bar;
 
     private InputAction _move_action;
     private Vector2 _movement;
@@ -28,7 +31,7 @@ public class Robo : MonoBehaviour
         gameObject.name = "His Robotness";
         _sprite = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
-
+		curr_health = max_health;
 
     }
     private void Awake(){
@@ -95,4 +98,9 @@ public class Robo : MonoBehaviour
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
     }
+	
+	public void TakeDamage(float damage){
+		curr_health -= damage;
+		health_bar.UpdateHealthBar();
+	}
 }
