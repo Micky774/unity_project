@@ -81,7 +81,7 @@ Shader "Unlit/NewUnlitShader"
                 // uv.x *= iResolution.x/iResolution.y;
 
                 float trap_radius = .25;
-                float scaled_time = _Time.w;
+                float scaled_time = _Time.z;
                 float trap_path_radius = 2.*cos(scaled_time)*sin(3.*scaled_time);
                 float2 trap = trap_path_radius*float2(cos(scaled_time), sin(scaled_time));
                 // float2 trap = scale(float2(0.5, 0.5), X_BOUNDS, Y_BOUNDS);
