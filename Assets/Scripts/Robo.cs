@@ -21,10 +21,19 @@ public class Robo : MonoBehaviour
     private Rigidbody2D _rigidbody;
     private float _projectile_spawn_dist = 3;
     private Vector3 _cursor;
-    private Quaternion _orientation;
-    // Start is called before the first frame update
+    private float _orientation;
     [SerializeField]
     private GameObject projectileParent;
+
+
+    public Vector3 GetCursor(){
+        return _cursor;
+    }
+    public float GetOrientation(){
+        return _orientation;
+    }
+
+    // Start is called before the first frame update
     void Start()
     {        
         gameObject.name = "His Robotness";
@@ -72,7 +81,7 @@ public class Robo : MonoBehaviour
     }
     void Update(){
         _cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
+        _orientation = Utilities.GetGlobalRotationAngle((Vector2) (_cursor - transform.position));
     }
     Vector2 CalcDelayVector(){
         Vector2 my_vel = _rigidbody.velocity;
@@ -90,7 +99,8 @@ public class Robo : MonoBehaviour
         GameObject created_duncan = Instantiate(
             duncan,
             _rigidbody.position + displacement.normalized * _projectile_spawn_dist,
-            _orientation,
+            // This flip is assuming projectiles at 0 degree rotation are heading SOUTH-BOUND
+            Quaternion.Euler(new Vector3(0, 0, _orientation + 180)),
             projectileParent.transform
         );
         // Set velocity based on projectiles' prescribed speed

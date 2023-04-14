@@ -10,9 +10,17 @@ public class FieldOfView : MonoBehaviour
     public LayerMask targetMask;
     public LayerMask wallMask;
     public List<Transform> visibleTargets = new List<Transform>();
+    public float meshPerDegree = .05f;
+    private Robo _robo;
+    private Vector3 _cursor;
+    private float _orientation;
 
+    public float GetOrientation(){
+        return _orientation;
+    }
     void Start(){
         StartCoroutine("FindTargetsWithDelay", .1f);
+        _robo = GetComponentInParent<Robo>();
 
     }
     private IEnumerator FindTargetsWithDelay(float delay){
@@ -21,9 +29,13 @@ public class FieldOfView : MonoBehaviour
             FindVisibleTargets();
         }
     }
+    private void Update(){
+        _cursor = _robo.GetCursor();
+        _orientation = _robo.GetOrientation();
+        DrawFieldOfView();
+    }
     void FindVisibleTargets(){
         visibleTargets.Clear();
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask);
         foreach(Collider2D targetCollider in targetsInViewRadius){
@@ -31,8 +43,8 @@ public class FieldOfView : MonoBehaviour
             Vector2 dirToTarget = (target.position - transform.position).normalized;
 
             // TODO: Generalize gaze direction to be on mouse cursor
-            float smallestAngle = Vector2.Angle(cursorPosition - transform.position, dirToTarget);
-            if(smallestAngle < viewAngle/2){
+            float smallestAngle = Vector2.Angle(_cursor - transform.position, dirToTarget);
+            if(smallestAngle < viewAngle / 2){
                 float distToTarget = Vector2.Distance(transform.position, target.position);
                 RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, wallMask);
                 if(hit.collider == null){
@@ -41,16 +53,27 @@ public class FieldOfView : MonoBehaviour
             }
         }
     }
-    
-
-    public Vector2 DirFromAngle(float angleDegrees, bool angleIsGlobal = false){
-        if(!angleIsGlobal){
-            angleDegrees += transform.eulerAngles.z;
+    void DrawFieldOfView(){
+        int stepCount = Mathf.RoundToInt(viewAngle * meshPerDegree);
+        float stepAngleSize = viewAngle / stepCount;
+        for(int i = 0; i <= stepCount; i++){
+            float angle = Utilities.GetGlobalRotationAngle(_cursor - transform.position) - viewAngle / 2 + stepAngleSize * i;
+            Debug.DrawRay(transform.position, Utilities.DirFromAngle(angle) * viewRadius, Color.black);
         }
-        // Note we swap Cos <--> Sin since unity angles are compass angles,
-        // whereas we want to use the usual math standard angles. The
-        // relationship is as follows: standard_ang = 90 - unity_ang.
-        // Equivalently, we can interchange Cos <--> Sin
-        return new Vector2(Mathf.Cos(angleDegrees*Mathf.Deg2Rad), Mathf.Sin(angleDegrees*Mathf.Deg2Rad));
+    }
+    void ViewCast(float globalAngle) {
+        return;
+    }
+    public struct ViewCastInfo {
+        public bool hit;
+        public Vector3 point;
+        public float dist;
+        public float angle;
+        public ViewCastInfo(bool hit, Vector3 point, float dist, float angle){
+            this.hit = hit;
+            this.point = point;
+            this.dist = dist;
+            this.angle = angle;
+        }
     }
 }
