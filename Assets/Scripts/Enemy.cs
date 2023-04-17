@@ -45,7 +45,7 @@ public class Enemy : MonoBehaviour
 		}
 	}	
 	
-	void OnCollisionEnter2D(Collision2D collision) {
+	void OnCollisionStay2D(Collision2D collision) {
 		ContactPoint2D contact = collision.contacts[0];
 		GameObject hit_object = contact.collider.gameObject;
         if(hit_object.tag == "Player"){
