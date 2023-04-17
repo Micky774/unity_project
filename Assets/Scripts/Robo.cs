@@ -18,8 +18,10 @@ public class Robo : MonoBehaviour
 	public int curr_health;
 	public int max_health = 5;
 	public HealthBar health_bar;
+    public GameOverScreen game_over;
 
     private InputAction _move_action;
+    private InputAction _fire_action;
     private Vector2 _movement;
     private SpriteRenderer _sprite;
     private Rigidbody2D _rigidbody;
@@ -49,8 +51,9 @@ public class Robo : MonoBehaviour
         _move_action = playerInputs.Player.movement;
         _move_action.Enable();
 
-        playerInputs.Player.fire.performed += FireDuncan;
-        playerInputs.Player.fire.Enable();
+        _fire_action = playerInputs.Player.fire;
+        _fire_action.performed += FireDuncan;
+        _fire_action.Enable();
     }
 
     // Update is called once per tick, and hence is independant on framerate.
@@ -123,6 +126,13 @@ public class Robo : MonoBehaviour
 		}
 		curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
 		health_bar.UpdateHealthBar();
+        if(curr_health == 0) {
+            _move_action.Disable();
+            _fire_action.performed -= FireDuncan;
+            _fire_action.Disable();
+            game_over.Display();
+        }
+
 		StartCoroutine(Iframes());
 	}
 }
