@@ -6,6 +6,9 @@ using UnityEngine.InputSystem;
 
 public class ContextEvent : UnityEvent<InputAction.CallbackContext>{}
 
+/*
+ * Player character
+ */
 public class Robo : MonoBehaviour
 {
     public GameObject duncan;
@@ -14,6 +17,8 @@ public class Robo : MonoBehaviour
     public float move_strength = 40;
     public float max_speed = 12;
     public float decay_rate = 25;
+
+    // Player health system variables
 	public float invincibility_duration_seconds = 1.5f;
 	public int curr_health;
 	public int max_health = 5;
@@ -28,6 +33,8 @@ public class Robo : MonoBehaviour
     private float _projectile_spawn_dist = 3;
     private Vector3 _cursor;
     private Quaternion _orientation;
+
+    // If true, makes player take no damage when hit. Currently used only for invincibility frames.
 	private bool _invincible = false;
 	
     // Start is called before the first frame update
@@ -39,24 +46,29 @@ public class Robo : MonoBehaviour
         gameObject.name = "His Robotness";
         _sprite = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
-		curr_health = max_health;
 
+        // Sets player health to maximum possible on instantiation.
+		curr_health = max_health;
     }
     private void Awake(){
         if (playerInputs == null){
             playerInputs = new PlayerInputs();
         }
     }
+
     private void OnEnable(){
+
+        // Enables WASD movement
         _move_action = playerInputs.Player.movement;
         _move_action.Enable();
 
+        // Enables clicking to fire Duncan
         _fire_action = playerInputs.Player.fire;
         _fire_action.performed += FireDuncan;
         _fire_action.Enable();
     }
 
-    // Update is called once per tick, and hence is independant on framerate.
+    // Update is called once per tick, and hence is independent of framerate.
     // We primarily use this to mediate physics.
     void FixedUpdate()
     {
@@ -85,7 +97,7 @@ public class Robo : MonoBehaviour
         _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
     }
 	
-	//Gives player invinicibility frames
+	// Gives player invincibility frames
 	private IEnumerator Iframes()
 	{
 		_invincible = true;
@@ -119,13 +131,18 @@ public class Robo : MonoBehaviour
         return;
     }
 	
+    // Processes damage taken by player
 	public void TakeDamage(int damage){
-		//Player takes no damage if in invincibility frames
+		// Player takes no damage if currently invincible
 		if(_invincible) {
 			return;
 		}
+
+        // Updates health
 		curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
 		health_bar.UpdateHealthBar();
+
+        // Disables player control and displays game over screen on player death
         if(curr_health == 0) {
             _move_action.Disable();
             _fire_action.performed -= FireDuncan;
@@ -133,6 +150,7 @@ public class Robo : MonoBehaviour
             game_over.Display();
         }
 
+        // Gives player invincibility frames after being hit
 		StartCoroutine(Iframes());
 	}
 }

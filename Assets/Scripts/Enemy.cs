@@ -2,25 +2,34 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/*
+ * Basic enemy. Follows player directly.
+ */
 public class Enemy : MonoBehaviour
 {
 
     private Rigidbody2D myRigidbody;
     private SpriteRenderer mySprite;
     public Rigidbody2D player;
-    // Start is called before the first frame update
     public float max_speed = 4;
     public float acceleration_rate = 1;
-	public float max_health = 100;
-	public float curr_health;
+
+    // Variables for health management
+	public int max_health = 100;
+	public int curr_health;
+
+    // Damage done by enemy to player on hit
 	public int damage = 1;
 		
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
     }
+
+    // Start is called before the first frame update
     void Start()
     {
+        // Enemy instantiated with maximum health
 		curr_health = max_health;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
     }
@@ -38,16 +47,23 @@ public class Enemy : MonoBehaviour
         myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
     }
 	
-	public void TakeDamage(float damage) {
+    // Processes damage taken
+	public void TakeDamage(int damage) {
 		curr_health -= damage;
+
+        // Destroys enemy if no health remains
 		if(curr_health <= 0){
 			Destroy(gameObject);
 		}
 	}	
 	
+    // Runs once every frame during which a collision is occurring
 	void OnCollisionStay2D(Collision2D collision) {
+        // Gets the object hit by the enemy
 		ContactPoint2D contact = collision.contacts[0];
 		GameObject hit_object = contact.collider.gameObject;
+
+        // Damages player if enemy hits player
         if(hit_object.tag == "Player"){
             hit_object.GetComponent<Robo>().TakeDamage(damage);
         }
