@@ -20,10 +20,13 @@ public class Enemy : MonoBehaviour
 
     // Damage done by enemy to player on hit
 	public int damage = 1;
+
+    private Animator _animator;
 		
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
+        _animator = GetComponent<Animator>();
     }
 
     // Start is called before the first frame update
@@ -50,6 +53,8 @@ public class Enemy : MonoBehaviour
     // Processes damage taken
 	public void TakeDamage(int damage) {
 		curr_health -= damage;
+
+        _animator.SetTrigger("IsDamaged");
 
         // Destroys enemy if no health remains
 		if(curr_health <= 0){

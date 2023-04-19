@@ -15616,6 +15616,7 @@ GameObject:
   - component: {fileID: 237373364}
   - component: {fileID: 237373367}
   - component: {fileID: 237373368}
+  - component: {fileID: 237373369}
   m_Layer: 0
   m_Name: Robo
   m_TagString: Player
@@ -15812,6 +15813,27 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   visibleTargets: []
+--- !u!95 &237373369
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237373361}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: b4061a5beb3bd6a4584643b0cb44017a, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1001 &299175999
 PrefabInstance:
   m_ObjectHideFlags: 0

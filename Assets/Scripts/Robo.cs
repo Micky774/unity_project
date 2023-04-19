@@ -36,6 +36,8 @@ public class Robo : MonoBehaviour
 
     // If true, makes player take no damage when hit. Currently used only for invincibility frames.
 	private bool _invincible = false;
+
+    private Animator _animator;
 	
     // Start is called before the first frame update
     [SerializeField]
@@ -46,6 +48,7 @@ public class Robo : MonoBehaviour
         gameObject.name = "His Robotness";
         _sprite = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
+        _animator = GetComponent<Animator>();
 
         // Sets player health to maximum possible on instantiation.
 		curr_health = max_health;
@@ -140,6 +143,7 @@ public class Robo : MonoBehaviour
 
         // Updates health
 		curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
+        _animator.SetTrigger("IsDamaged");
 		health_bar.UpdateHealthBar();
 
         // Disables player control and displays game over screen on player death
@@ -153,4 +157,8 @@ public class Robo : MonoBehaviour
         // Gives player invincibility frames after being hit
 		StartCoroutine(Iframes());
 	}
+
+    public void DamageAnimation(){
+        _sprite.color = Color.red;
+    }
 }
