@@ -9,12 +9,10 @@ using UnityEngine.SceneManagement;
  */
 public class GameOverScreen : MonoBehaviour
 {
-    // Makes game over screen visible
     public void Display() {
         gameObject.SetActive(true);
     }
 
-    // Restarts game
     public void Restart(){
         SceneManager.LoadScene("SampleScene");
     }

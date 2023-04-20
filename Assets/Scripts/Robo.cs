@@ -19,10 +19,10 @@ public class Robo : MonoBehaviour
     public float decay_rate = 25;
 
     // Player health system variables
-	public float invincibility_duration_seconds = 1.5f;
-	public int curr_health;
-	public int max_health = 5;
-	public HealthBar health_bar;
+    public float invincibility_duration_seconds = 1.5f;
+    public int curr_health;
+    public int max_health = 5;
+    public HealthBar health_bar;
     public GameOverScreen game_over;
 
     private InputAction _move_action;
@@ -35,10 +35,10 @@ public class Robo : MonoBehaviour
     private Quaternion _orientation;
 
     // If true, makes player take no damage when hit. Currently used only for invincibility frames.
-	private bool _invincible = false;
+    private bool _invincible = false;
 
     private Animator _animator;
-	
+    
     // Start is called before the first frame update
     [SerializeField]
     private GameObject projectileParent;
@@ -50,8 +50,7 @@ public class Robo : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
 
-        // Sets player health to maximum possible on instantiation.
-		curr_health = max_health;
+        curr_health = max_health;
     }
     private void Awake(){
         if (playerInputs == null){
@@ -99,17 +98,17 @@ public class Robo : MonoBehaviour
         _cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
     }
-	
-	// Gives player invincibility frames
-	private IEnumerator Iframes()
-	{
-		_invincible = true;
-		
-		yield return new WaitForSeconds(invincibility_duration_seconds);
-		
-		_invincible = false;
-	}
-	
+    
+    // Gives player invincibility frames
+    private IEnumerator Iframes()
+    {
+        _invincible = true;
+        
+        yield return new WaitForSeconds(invincibility_duration_seconds);
+        
+        _invincible = false;
+    }
+    
     Vector2 CalcDelayVector(){
         Vector2 my_vel = _rigidbody.velocity;
 
@@ -133,18 +132,18 @@ public class Robo : MonoBehaviour
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
     }
-	
+    
     // Processes damage taken by player
-	public void TakeDamage(int damage){
-		// Player takes no damage if currently invincible
-		if(_invincible) {
-			return;
-		}
+    public void TakeDamage(int damage){
+        // Player takes no damage if currently invincible
+        if(_invincible) {
+            return;
+        }
 
         // Updates health
-		curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
+        curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
         _animator.SetTrigger("IsDamaged");
-		health_bar.UpdateHealthBar();
+        health_bar.UpdateHealthBar();
 
         // Disables player control and displays game over screen on player death
         if(curr_health == 0) {
@@ -155,10 +154,6 @@ public class Robo : MonoBehaviour
         }
 
         // Gives player invincibility frames after being hit
-		StartCoroutine(Iframes());
-	}
-
-    public void DamageAnimation(){
-        _sprite.color = Color.red;
+        StartCoroutine(Iframes());
     }
 }
