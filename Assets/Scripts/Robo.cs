@@ -23,6 +23,7 @@ public class Robo : MonoBehaviour
     public int curr_health;
     public int max_health = 5;
     public HealthBar health_bar;
+    public GameEvent player_death;
     public GameOverScreen game_over;
 
     private InputAction _move_action;
@@ -145,14 +146,16 @@ public class Robo : MonoBehaviour
         _animator.SetTrigger("IsDamaged");
         health_bar.UpdateHealthBar();
 
-        // Disables player control and displays game over screen on player death
+        // Handles player death
         if(curr_health == 0) {
             DisableControls();
-            game_over.Display();
-        }
-
+            player_death.TriggerEvent();
+            StartCoroutine(game_over.Display());
+            _invincible = true;
+        } else {
         // Gives player invincibility frames after being hit
         StartCoroutine(Iframes());
+        }
     }
 
     // Prevents player from moving and shooting

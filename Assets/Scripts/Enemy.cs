@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     private Rigidbody2D myRigidbody;
     private SpriteRenderer mySprite;
     public Rigidbody2D player;
+    public GameOverScreen game_over;
     public float max_speed = 4;
     public float acceleration_rate = 1;
 
@@ -20,11 +21,17 @@ public class Enemy : MonoBehaviour
     public int damage = 1;
 
     private Animator _animator;
+
+    private delegate void TimeBasedAction(float time_step);
+
+    // Allows changing of how enemy moves without changing method calls
+    private TimeBasedAction Move;
         
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
+
     }
 
     // Start is called before the first frame update
@@ -32,6 +39,9 @@ public class Enemy : MonoBehaviour
     {
         curr_health = max_health;
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+
+        // Current initial behavior is to follow the player unrelentingly until player death
+        Move = FollowPlayer;
     }
 
     // Update is called once per frame
@@ -40,11 +50,7 @@ public class Enemy : MonoBehaviour
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
-        // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = player.position - myRigidbody.position;
-        mySprite.flipX = acceleration.x <= 0;
-        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
-        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
+        Move(time_step);
     }
     
     public void TakeDamage(int damage) {
@@ -66,5 +72,38 @@ public class Enemy : MonoBehaviour
         if(hit_object.tag == "Player"){
             hit_object.GetComponent<Robo>().TakeDamage(damage);
         }
+    }
+
+    // Enemy moves in direction of player up to max speed
+    private void FollowPlayer(float time_step) {
+        // Constructs a unit-vector along one of the eight digital directions
+        Vector2 acceleration = player.position - myRigidbody.position;
+        mySprite.flipX = acceleration.x <= 0;
+        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
+        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
+    }
+
+    // Enemy stops moving entirely
+    private void StandStill(float time_step) {
+        myRigidbody.velocity = Vector2.zero;
+    }
+
+    // Enemy moves away from player up to 1/3 max speed
+    private void WanderOffSlowly(float time_step){
+        Vector2 acceleration = myRigidbody.position - player.position;
+        mySprite.flipX = acceleration.x <= 0;
+        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
+        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed/3f);
+    }
+
+    // Coroutine for enemy behavior on player death
+    private IEnumerator GetBored(){
+        Move = StandStill;
+        yield return new WaitForSeconds(GameOverScreen.seconds_til_game_over / 3f);
+        Move = WanderOffSlowly;
+    }
+
+    public void OnPlayerDeath(){
+        StartCoroutine(GetBored());
     }
 }

@@ -9,7 +9,11 @@ using UnityEngine.SceneManagement;
  */
 public class GameOverScreen : MonoBehaviour
 {
-    public void Display() {
+    public static float seconds_til_game_over = 3f;
+
+    // Displays game over screen after a short time
+    public IEnumerator Display() {
+        yield return new WaitForSeconds(seconds_til_game_over);
         gameObject.SetActive(true);
     }
 

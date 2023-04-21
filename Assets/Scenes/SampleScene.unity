@@ -15713,6 +15713,7 @@ MonoBehaviour:
   curr_health: 0
   max_health: 5
   health_bar: {fileID: 392226249}
+  player_death: {fileID: 11400000, guid: e40ce540432eafe418c0b871d82aa2ee, type: 2}
   game_over: {fileID: 1494898454}
   projectileParent: {fileID: 2091613859}
 --- !u!61 &237373365
@@ -17219,7 +17220,7 @@ GameObject:
   - component: {fileID: 1494898454}
   m_Layer: 5
   m_Name: GameOverScreen
-  m_TagString: Untagged
+  m_TagString: GameOver
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
