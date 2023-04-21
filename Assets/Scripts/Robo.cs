@@ -147,13 +147,17 @@ public class Robo : MonoBehaviour
 
         // Disables player control and displays game over screen on player death
         if(curr_health == 0) {
-            _move_action.Disable();
-            _fire_action.performed -= FireDuncan;
-            _fire_action.Disable();
+            DisableControls();
             game_over.Display();
         }
 
         // Gives player invincibility frames after being hit
         StartCoroutine(Iframes());
+    }
+
+    // Prevents player from moving and shooting
+    private void DisableControls() {
+        _move_action.Disable();
+        _fire_action.Disable();
     }
 }
