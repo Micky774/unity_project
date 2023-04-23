@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1812771460209059633}
   m_Layer: 8
   m_Name: Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -149,3 +149,6 @@ MonoBehaviour:
   player: {fileID: 0}
   max_speed: 4
   acceleration_rate: 1
+  max_health: 100
+  curr_health: 0
+  damage: 1

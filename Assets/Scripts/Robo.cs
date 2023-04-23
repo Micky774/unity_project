@@ -15,6 +15,12 @@ public class Robo : MonoBehaviour
     public float max_speed = 12;
     public float decay_rate = 25;
 
+    // Player health system variables
+    public float invincibility_duration_seconds = 1.5f;
+    public int curr_health;
+    public int max_health = 5;
+    public HealthBar health_bar;
+
     private InputAction _move_action;
     private Vector2 _movement;
     private SpriteRenderer _sprite;
@@ -22,6 +28,10 @@ public class Robo : MonoBehaviour
     private float _projectile_spawn_dist = 3;
     private Vector3 _cursor;
     private Quaternion _orientation;
+
+    // If true, makes player take no damage when hit. Currently used only for invincibility frames.
+    private bool _invincible = false;
+
     // Start is called before the first frame update
     [SerializeField]
     private GameObject projectileParent;
@@ -31,7 +41,7 @@ public class Robo : MonoBehaviour
         _sprite = GetComponent<SpriteRenderer>();
         _rigidbody = GetComponent<Rigidbody2D>();
 
-
+        curr_health = max_health;
     }
     private void Awake(){
         if (playerInputs == null){
@@ -74,6 +84,17 @@ public class Robo : MonoBehaviour
         _cursor = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         _orientation = Utilities.GetGlobalRotation((Vector2) (_cursor - transform.position));
     }
+
+    // Gives player invincibility frames
+    private IEnumerator Iframes()
+    {
+        _invincible = true;
+        
+        yield return new WaitForSeconds(invincibility_duration_seconds);
+        
+        _invincible = false;
+    }
+
     Vector2 CalcDelayVector(){
         Vector2 my_vel = _rigidbody.velocity;
 
@@ -96,5 +117,19 @@ public class Robo : MonoBehaviour
         // Set velocity based on projectiles' prescribed speed
         created_duncan.GetComponent<Rigidbody2D>().velocity = displacement * (created_duncan.GetComponent<Duncan>().speed / displacement.magnitude);
         return;
+    }
+
+        // Processes damage taken by player
+    public void TakeDamage(int damage){
+        // Player takes no damage if currently invincible
+        if(_invincible) {
+            return;
+        }
+
+        // Updates health
+        curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
+        health_bar.UpdateHealthBar();
+
+        StartCoroutine(Iframes());
     }
 }

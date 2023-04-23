@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Time
   - Wall
+  - Enemy
   layers:
   - Default
   - TransparentFX
@@ -45,4 +46,7 @@ TagManager:
     locked: 0
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: UI
+    uniqueID: 1380404343
     locked: 0
