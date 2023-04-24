@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 7193263220698795380}
   - component: {fileID: 8447777732565227178}
   - component: {fileID: 1475945724943641287}
-  - component: {fileID: 8521327949926045508}
+  - component: {fileID: 9202540295832942371}
   m_Layer: 5
   m_Name: Heart
   m_TagString: Untagged
@@ -27,16 +27,16 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7090338872273658561}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 1.6990772}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -449.99994, y: 0}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
+  m_AnchoredPosition: {x: 50, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &8447777732565227178
@@ -77,7 +77,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &8521327949926045508
+--- !u!114 &9202540295832942371
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -89,3 +89,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8dabd8512edd91f4cbee54320be7b989, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  filled_heart: {fileID: 21300000, guid: 8e94c10d3188be24db36a5b822b98573, type: 3}
+  empty_heart: {fileID: 21300000, guid: 5616478df04536140a14b97cf5ff7c01, type: 3}
