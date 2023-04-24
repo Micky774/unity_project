@@ -16,7 +16,7 @@ public class Robo : MonoBehaviour
     public float decay_rate = 25;
 
     // Player health system variables
-    public float invincibility_duration_seconds = 1.5f;
+    public float invincibility_duration = 1.5f;
     public int curr_health;
     public int max_health = 5;
     public HealthBar health_bar;
@@ -90,7 +90,7 @@ public class Robo : MonoBehaviour
     {
         _invincible = true;
         
-        yield return new WaitForSeconds(invincibility_duration_seconds);
+        yield return new WaitForSeconds(invincibility_duration);
         
         _invincible = false;
     }
