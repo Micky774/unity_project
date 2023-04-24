@@ -128,7 +128,7 @@ public class Robo : MonoBehaviour
 
         // Updates health
         curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
-        health_bar.UpdateHealthBar();
+        curr_health = health_bar.UpdateHealth(curr_health);
 
         StartCoroutine(Iframes());
     }

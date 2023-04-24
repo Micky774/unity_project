@@ -16405,11 +16405,58 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4bde5b55de43f45abe89fcde609bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 237373364}
   heart_prefab: {fileID: 7090338872273658561, guid: 56ebf39288d19154b8cc64cc3d10450b, type: 3}
-  filled_heart: {fileID: 21300000, guid: 8e94c10d3188be24db36a5b822b98573, type: 3}
-  empty_heart: {fileID: 21300000, guid: 5616478df04536140a14b97cf5ff7c01, type: 3}
-  hearts: []
+  hearts:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   max_hearts: 5
 --- !u!1 &2091613859
 GameObject:

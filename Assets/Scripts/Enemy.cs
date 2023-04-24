@@ -41,9 +41,9 @@ public class Enemy : MonoBehaviour
     }
 
     public void TakeDamage(int damage) {
-        curr_health -= damage;
+        curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
 
-        if(curr_health <= 0){
+        if(curr_health == 0){
             OnDeath();
         }
     }    

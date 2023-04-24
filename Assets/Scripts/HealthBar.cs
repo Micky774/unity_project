@@ -7,18 +7,19 @@ using UnityEngine.UI;
  * UI player health bar
  * Displays player health remaining using a heart tally
  */
+
 public class HealthBar : MonoBehaviour
 {
+    public const int MAXIMUM_HEARTS = 50;
     // Variable values assigned in Inspector
-    public Robo player;
     public GameObject heart_prefab;
 
     // Variables instantiated during runtime
-    public Heart[] hearts = new Heart[50];
+    public Heart[] hearts = new Heart[MAXIMUM_HEARTS];
     
-    [Range(1, 10)]
+    [Range(1, 50)]
     public int max_hearts = 5;
-
+    private int _current_health;
     
     void Start() {
         if(max_hearts > hearts.Length) {
@@ -33,22 +34,24 @@ public class HealthBar : MonoBehaviour
                 .Init(idx)
             );
         }
+        _current_health = max_hearts;
     }
     
-
-    
-    public void UpdateHealthBar(){
+    public int UpdateHealth(int new_health){
         // Ensures player's health variable never exceeds the max number of hearts in use
-        if (player.curr_health > max_hearts) {
-            player.curr_health = max_hearts;
-        }
+        new_health = Mathf.Clamp(new_health, 0, max_hearts);
 
         // Sets heart sprites to match player health
-        for (int i = 0; i < player.curr_health; i++) {
-            hearts[i].SetMode(HEART_MODE.active);
-        }
-        for (int i = player.curr_health; i < max_hearts; i++) {
+        for (int i = new_health; i < _current_health; i++) {
             hearts[i].SetMode(HEART_MODE.inactive);
         }
+        _current_health = new_health;
+
+        return new_health;
+    }
+    public int SetMaxHearts(int new_max_hearts){
+        new_max_hearts = Mathf.Clamp(new_max_hearts, 1, MAXIMUM_HEARTS);
+        max_hearts = new_max_hearts;
+        return max_hearts;
     }
 }
