@@ -44,7 +44,7 @@ public class Enemy : MonoBehaviour
         curr_health -= damage;
 
         if(curr_health <= 0){
-            Destroy(gameObject);
+            OnDeath();
         }
     }    
 
@@ -56,5 +56,9 @@ public class Enemy : MonoBehaviour
         if(hit_object.tag == "Player"){
             hit_object.GetComponent<Robo>().TakeDamage(damage);
         }
+    }
+
+    private void OnDeath() {
+        Destroy(gameObject);
     }
 }
