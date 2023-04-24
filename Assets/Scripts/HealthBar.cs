@@ -27,12 +27,12 @@ public class HealthBar : MonoBehaviour
         }
 
         // Sets heart sprites to match player health
-        for (int i = 0; i < max_hearts; i++) {
-            if(i < player.curr_health) {
-                hearts[i].GetComponent<Image>().sprite = filled_heart;
-            }
-            else {
-                hearts[i].GetComponent<Image>().sprite = empty_heart;
+        for (int i = 0; i < player.curr_health; i++) {
+            hearts[i].GetComponent<Image>().sprite = filled_heart;
+        }
+        for (int i = player.curr_health; i < max_hearts; i++) {
+            hearts[i].GetComponent<Image>().sprite = empty_heart;
+        }
             }
         }
     }
