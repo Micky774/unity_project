@@ -33,7 +33,5 @@ public class HealthBar : MonoBehaviour
         for (int i = player.curr_health; i < max_hearts; i++) {
             hearts[i].GetComponent<Image>().sprite = empty_heart;
         }
-            }
-        }
     }
 }
