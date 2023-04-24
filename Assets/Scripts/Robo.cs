@@ -119,7 +119,7 @@ public class Robo : MonoBehaviour
         return;
     }
 
-        // Processes damage taken by player
+    // Processes damage taken by player
     public void TakeDamage(int damage){
         // Player takes no damage if currently invincible
         if(_invincible) {
