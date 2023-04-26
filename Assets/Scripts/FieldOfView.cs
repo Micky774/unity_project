@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class FieldOfView : MonoBehaviour
 {
-    public float viewRadius = 10;
+    public float view_radius = 10;
     [Range(0, 360)]
-    public float viewAngle = 90;
+    public float view_angle = 90;
     public LayerMask targetMask;
     public LayerMask wallMask;
     public List<Transform> visibleTargets = new List<Transform>();
 
     void Start(){
-        StartCoroutine("FindTargetsWithDelay", .1f);
+        StartCoroutine(FindTargetsWithDelay(.1f));
 
     }
     private IEnumerator FindTargetsWithDelay(float delay){
@@ -22,35 +22,35 @@ public class FieldOfView : MonoBehaviour
         }
     }
     void FindVisibleTargets(){
-        visibleTargets.Clear();
-        Vector3 cursorPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        this.visibleTargets.Clear();
+        Vector3 cursor_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(transform.position, viewRadius, targetMask);
+        Collider2D[] targetsInViewRadius = Physics2D.OverlapCircleAll(this.transform.position, this.view_radius, this.targetMask);
         foreach(Collider2D targetCollider in targetsInViewRadius){
             Transform target = targetCollider.transform;
-            Vector2 dirToTarget = (target.position - transform.position).normalized;
+            Vector2 dir_to_target = (target.position - this.transform.position).normalized;
 
             // TODO: Generalize gaze direction to be on mouse cursor
-            float smallestAngle = Vector2.Angle(cursorPosition - transform.position, dirToTarget);
-            if(smallestAngle < viewAngle/2){
-                float distToTarget = Vector2.Distance(transform.position, target.position);
-                RaycastHit2D hit = Physics2D.Raycast(transform.position, dirToTarget, distToTarget, wallMask);
+            float smallest_angle = Vector2.Angle(cursor_position - this.transform.position, dir_to_target);
+            if(smallest_angle < this.view_angle/2){
+                float dist_to_target = Vector2.Distance(this.transform.position, target.position);
+                RaycastHit2D hit = Physics2D.Raycast(this.transform.position, dir_to_target, dist_to_target, this.wallMask);
                 if(hit.collider == null){
-                    visibleTargets.Add(target);
+                    this.visibleTargets.Add(target);
                 }
             }
         }
     }
     
 
-    public Vector2 DirFromAngle(float angleDegrees, bool angleIsGlobal = false){
-        if(!angleIsGlobal){
-            angleDegrees += transform.eulerAngles.z;
+    public Vector2 DirFromAngle(float angle_degrees, bool angle_is_global = false){
+        if(!angle_is_global){
+            angle_degrees += this.transform.eulerAngles.z;
         }
         // Note we swap Cos <--> Sin since unity angles are compass angles,
         // whereas we want to use the usual math standard angles. The
         // relationship is as follows: standard_ang = 90 - unity_ang.
         // Equivalently, we can interchange Cos <--> Sin
-        return new Vector2(Mathf.Cos(angleDegrees*Mathf.Deg2Rad), Mathf.Sin(angleDegrees*Mathf.Deg2Rad));
+        return new Vector2(Mathf.Cos(angle_degrees * Mathf.Deg2Rad), Mathf.Sin(angle_degrees * Mathf.Deg2Rad));
     }
 }

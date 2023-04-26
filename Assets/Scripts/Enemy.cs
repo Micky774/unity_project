@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
-
-    private Rigidbody2D myRigidbody;
-    private SpriteRenderer mySprite;
-    public Rigidbody2D player;
-    // Start is called before the first frame update
     public float max_speed = 4;
     public float acceleration_rate = 1;
+    public Rigidbody2D player;
+
+    private Rigidbody2D _myRigidbody;
+    private SpriteRenderer _mySprite;
     private void Awake(){
-        myRigidbody = GetComponent<Rigidbody2D>();
-        mySprite = GetComponent<SpriteRenderer>();
+        this._myRigidbody = GetComponent<Rigidbody2D>();
+        this._mySprite = GetComponent<SpriteRenderer>();
     }
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        this.player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
@@ -27,9 +26,9 @@ public class Enemy : MonoBehaviour
         float time_step = Time.fixedDeltaTime;
 
         // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = player.position - myRigidbody.position;
-        mySprite.flipX = acceleration.x <= 0;
-        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
-        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
+        Vector2 acceleration = this.player.position - this._myRigidbody.position;
+        this._mySprite.flipX = acceleration.x <= 0;
+        acceleration *= time_step * this.acceleration_rate / acceleration.magnitude;
+        this._myRigidbody.velocity = Vector2.ClampMagnitude(this._myRigidbody.velocity + acceleration, this.max_speed);
     }
 }

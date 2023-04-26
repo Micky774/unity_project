@@ -15713,7 +15713,7 @@ MonoBehaviour:
   move_strength: 12
   max_speed: 18
   decay_rate: 12
-  projectileParent: {fileID: 2091613859}
+  _projectileParent: {fileID: 2091613859}
 --- !u!61 &237373365
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -15803,8 +15803,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bd35e4d753b19634b8fb61e940213b78, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  viewRadius: 20
-  viewAngle: 73
+  view_radius: 10
+  view_angle: 90
   targetMask:
     serializedVersion: 2
     m_Bits: 256
