@@ -41,8 +41,8 @@ public class Robo : MonoBehaviour
         this._moveAction = this.playerInputs.Player.movement;
         this._moveAction.Enable();
 
-        playerInputs.Player.fire.performed += FireDuncan;
-        playerInputs.Player.fire.Enable();
+        this.playerInputs.Player.fire.performed += FireDuncan;
+        this.playerInputs.Player.fire.Enable();
     }
 
     // Update is called once per tick, and hence is independent of framerate.
