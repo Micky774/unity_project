@@ -20,6 +20,7 @@ public class Robo : MonoBehaviour
     public int curr_health;
     public int max_health = 5;
     public HealthBar health_bar;
+    public GameOverScreen gameOver; // Initialized in Inspector
 
     private InputAction _move_action;
     private Vector2 _movement;
@@ -42,6 +43,7 @@ public class Robo : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
 
         curr_health = max_health;
+        StartCoroutine(GameOverDebug());
     }
     private void Awake(){
         if (playerInputs == null){
@@ -131,5 +133,11 @@ public class Robo : MonoBehaviour
         curr_health = health_bar.UpdateHealth(curr_health);
 
         StartCoroutine(Iframes());
+    }
+
+    private IEnumerator GameOverDebug(){
+        yield return new WaitForSeconds(10);
+        playerInputs.Player.fire.performed -= FireDuncan;
+        StartCoroutine(gameOver.Display());
     }
 }
