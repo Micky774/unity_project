@@ -83,7 +83,7 @@ public class Robo : MonoBehaviour
     }
     void FireDuncan(InputAction.CallbackContext ctx){
         // Grab point of cursor at this exact time
-        Vector2 displacement = _cursor - transform.position;
+        Vector2 displacement = this._cursor - this.transform.position;
         
         // Spawn projectile in the direction of the target
         GameObject created_duncan = Instantiate(
