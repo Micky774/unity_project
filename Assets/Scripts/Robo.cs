@@ -43,7 +43,6 @@ public class Robo : MonoBehaviour
         _rigidbody = GetComponent<Rigidbody2D>();
 
         curr_health = max_health;
-        StartCoroutine(GameOverDebug());
     }
     private void Awake(){
         if (playerInputs == null){
@@ -135,6 +134,7 @@ public class Robo : MonoBehaviour
         StartCoroutine(Iframes());
     }
 
+    
     private IEnumerator GameOverDebug(){
         yield return new WaitForSeconds(10);
         playerInputs.Player.fire.performed -= FireDuncan;
