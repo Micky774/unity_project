@@ -134,9 +134,12 @@ public class Robo : MonoBehaviour
         StartCoroutine(Iframes());
     }
 
-    
     private IEnumerator GameOverDebug(){
         yield return new WaitForSeconds(10);
+        OnDeath();
+    }
+
+    private void OnDeath(){
         playerInputs.Player.fire.performed -= FireDuncan;
         StartCoroutine(gameOver.Display());
     }
