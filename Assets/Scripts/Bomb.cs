@@ -4,32 +4,13 @@ using UnityEngine;
 
 public class Bomb : Enemy
 {
+    private const float MAX_SPEED = 4;
+    private const float ACCELERATION_RATE = 1;
 
-    private Rigidbody2D myRigidbody;
-    private SpriteRenderer mySprite;
-    public Rigidbody2D player;
-    // Start is called before the first frame update
-    public float max_speed = 4;
-    public float acceleration_rate = 1;
-    private void Awake(){
-        myRigidbody = GetComponent<Rigidbody2D>();
-        mySprite = GetComponent<SpriteRenderer>();
-    }
-    void Start()
+    protected override void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        // Used to normalize updates across various frame-rates
-        float time_step = Time.fixedDeltaTime;
-
-        // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = player.position - myRigidbody.position;
-        mySprite.flipX = acceleration.x <= 0;
-        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
-        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
+        Rigidbody2D player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
+        MoveBehaviour myMoveBehaviour = new FollowPlayer(this, player, MAX_SPEED, ACCELERATION_RATE);
+        this.myCombatBehaviour = new JustMove(myMoveBehaviour);
     }
 }
