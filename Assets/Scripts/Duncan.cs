@@ -6,14 +6,15 @@ public class Duncan : MonoBehaviour
 {
     public float speed = 4;
 
-    public void Init(Vector2 displacement){
-        GetComponent<Rigidbody2D>().velocity = displacement * (this.speed / displacement.magnitude);
+    public Duncan Init(Vector2 displacement){
+        this.GetComponent<Rigidbody2D>().velocity = displacement * (this.speed / displacement.magnitude);
+        return this;
     }
-    void OnCollisionEnter2D(Collision2D collision)
+    protected void OnCollisionEnter2D(Collision2D collision)
     {
         ContactPoint2D contact = collision.contacts[0];
         if(contact.collider.gameObject.tag == "Wall"){
-            Destroy(this.gameObject);
+            Object.Destroy(this.gameObject);
         }
     }
 }

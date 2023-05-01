@@ -11,17 +11,16 @@ public class FieldOfView : MonoBehaviour
     public LayerMask wallMask;
     public List<Transform> visibleTargets = new List<Transform>();
 
-    void Start(){
-        StartCoroutine(FindTargetsWithDelay(.1f));
-
+    protected void Start(){
+        StartCoroutine(this._FindTargetsWithDelay(.1f));
     }
-    private IEnumerator FindTargetsWithDelay(float delay){
+    private IEnumerator _FindTargetsWithDelay(float delay){
         while(true){
             yield return new WaitForSeconds(delay);
-            FindVisibleTargets();
+            this._FindVisibleTargets();
         }
     }
-    void FindVisibleTargets(){
+    private void _FindVisibleTargets(){
         this.visibleTargets.Clear();
         Vector3 cursor_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 

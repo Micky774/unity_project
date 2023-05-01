@@ -10,17 +10,18 @@ public class Enemy : MonoBehaviour
 
     private Rigidbody2D _myRigidbody;
     private SpriteRenderer _mySprite;
-    private void Awake(){
-        this._myRigidbody = GetComponent<Rigidbody2D>();
-        this._mySprite = GetComponent<SpriteRenderer>();
+    
+    protected void Awake(){
+        this._myRigidbody = this.GetComponent<Rigidbody2D>();
+        this._mySprite = this.GetComponent<SpriteRenderer>();
     }
-    void Start()
+    protected void Start()
     {
         this.player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    void Update()
+    protected void Update()
     {
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
