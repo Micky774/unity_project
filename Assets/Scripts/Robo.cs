@@ -50,12 +50,12 @@ public class Robo : MonoBehaviour
         }
     }
     private void OnEnable(){
-        _moveAction = playerInputs.Player.movement;
-        _moveAction.Enable();
+        this._moveAction = this.playerInputs.Player.movement;
+        this._moveAction.Enable();
 
-        _fireAction = playerInputs.Player.fire;
-        _fireAction.performed += FireDuncan;
-        _fireAction.Enable();
+        this._fireAction = this.playerInputs.Player.fire;
+        this._fireAction.performed += this.FireDuncan;
+        this._fireAction.Enable();
     }
 
     // Update is called once per tick, and hence is independant on framerate.
@@ -132,12 +132,12 @@ public class Robo : MonoBehaviour
         curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
         curr_health = health_bar.UpdateHealth(curr_health);
 
-        if(curr_health == 0){
+        if(this.curr_health == 0){
             this.OnDeath();
         }
         else
         {
-            StartCoroutine(Iframes());
+            StartCoroutine(this.Iframes());
         }
     }
 
@@ -148,9 +148,9 @@ public class Robo : MonoBehaviour
 
     private void OnDeath(){
         this._invincible = true;
-        _moveAction.Disable();
-        _fireAction.performed -= FireDuncan;
-        _fireAction.Disable();
+        this._moveAction.Disable();
+        this._fireAction.performed -= FireDuncan;
+        this._fireAction.Disable();
         StartCoroutine(gameOver.Display());
     }
 }
