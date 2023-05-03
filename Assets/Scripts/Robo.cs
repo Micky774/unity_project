@@ -22,7 +22,7 @@ public class Robo : MonoBehaviour
     public HealthBar health_bar;
     public GameOverScreen gameOver; // Initialized in Inspector
 
-    private InputAction _move_action;
+    private InputAction _moveAction, _fireAction;
     private Vector2 _movement;
     private SpriteRenderer _sprite;
     private Rigidbody2D _rigidbody;
@@ -50,11 +50,12 @@ public class Robo : MonoBehaviour
         }
     }
     private void OnEnable(){
-        _move_action = playerInputs.Player.movement;
-        _move_action.Enable();
+        _moveAction = playerInputs.Player.movement;
+        _moveAction.Enable();
 
-        playerInputs.Player.fire.performed += FireDuncan;
-        playerInputs.Player.fire.Enable();
+        _fireAction = playerInputs.Player.fire;
+        _fireAction.performed += FireDuncan;
+        _fireAction.Enable();
     }
 
     // Update is called once per tick, and hence is independant on framerate.
@@ -65,7 +66,7 @@ public class Robo : MonoBehaviour
         float time_step = Time.fixedDeltaTime;
 
         // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = _move_action.ReadValue<Vector2>();
+        Vector2 acceleration = _moveAction.ReadValue<Vector2>();
         acceleration = acceleration.normalized;
         _sprite.flipX = acceleration.x == 0 ? _sprite.flipX : acceleration.x < 0;
 
@@ -131,7 +132,13 @@ public class Robo : MonoBehaviour
         curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
         curr_health = health_bar.UpdateHealth(curr_health);
 
-        StartCoroutine(Iframes());
+        if(curr_health == 0){
+            this.OnDeath();
+        }
+        else
+        {
+            StartCoroutine(Iframes());
+        }
     }
 
     private IEnumerator GameOverDebug(){
@@ -140,7 +147,10 @@ public class Robo : MonoBehaviour
     }
 
     private void OnDeath(){
-        playerInputs.Player.fire.performed -= FireDuncan;
+        this._invincible = true;
+        _moveAction.Disable();
+        _fireAction.performed -= FireDuncan;
+        _fireAction.Disable();
         StartCoroutine(gameOver.Display());
     }
 }
