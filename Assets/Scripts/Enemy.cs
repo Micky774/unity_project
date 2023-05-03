@@ -11,7 +11,7 @@ public abstract class Enemy : MonoBehaviour{
     protected ENEMY_STATE _state = ENEMY_STATE.idle;
     protected bool _can_change_state = true;
     protected abstract void Start();
-    protected virtual void Update(){
+    protected virtual void FixedUpdate(){
         if(this._can_change_state){
             this.ChangeState();
         }
