@@ -149,7 +149,6 @@ public class Robo : MonoBehaviour
     private void OnDeath(){
         this._invincible = true;
         this._moveAction.Disable();
-        this._fireAction.performed -= FireDuncan;
         this._fireAction.Disable();
         StartCoroutine(gameOver.Display());
     }
