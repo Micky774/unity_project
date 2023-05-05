@@ -13,7 +13,7 @@ public class Bomb : Enemy
     // Bomb does nothing while idle, approaches player otherwise
     protected override void Start()
     {
-        this._myRigidBody = this.GetComponent<Rigidbody2D>();
+        this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
 
         // Uncomment this to check InvalidEnemyStateException checking
@@ -27,7 +27,7 @@ public class Bomb : Enemy
     // Bomb aware of player within 100 units, engaged within 50.
     protected override void ChangeState()
     {
-        float dist_to_player = (this._myRigidBody.position - this._player.position).magnitude;
+        float dist_to_player = (this._myRigidbody.position - this._player.position).magnitude;
         if (dist_to_player < 50)
         {
             this._state = ENEMY_STATE.engaged;
@@ -41,6 +41,7 @@ public class Bomb : Enemy
             this._state = ENEMY_STATE.idle;
         }
 
+        // Use the following line of code to check that _state changes
         // Debug.Log("My distance to the player is " + dist_to_player + " so my current enemy state is " + this._state);
     }
 }

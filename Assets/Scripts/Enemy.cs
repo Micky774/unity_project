@@ -15,7 +15,7 @@ public abstract class Enemy : MonoBehaviour{
     protected bool _can_change_state = true;
 
     // We assume all enemies will have a Rigidbody2D for collision purposes
-    protected Rigidbody2D _myRigidBody;
+    protected Rigidbody2D _myRigidbody;
 
     // We enforce that an enemy define a Start method to initialize its enemy-specific behaviours
     protected abstract void Start();
@@ -26,7 +26,15 @@ public abstract class Enemy : MonoBehaviour{
         if(this._can_change_state){
             this.ChangeState();
         }
-        this._can_change_state = this.PerformAction();
+        try
+        {
+            this._can_change_state = this.PerformAction();
+        }
+        catch(InvalidEnemyStateException ex){
+            Debug.LogException(ex);
+            this._state = ENEMY_STATE.idle;
+            this._can_change_state = true;
+        }
     }
 
     // We currently enforce that an enemy define a ChangeState method to determine the enemy-specific conditions under which it becomes idle, aware, and engaged.
@@ -41,10 +49,8 @@ public abstract class Enemy : MonoBehaviour{
                 return _awareBehaviour.Act();
             case ENEMY_STATE.engaged:
                 return _engagedBehaviour.Act();
-            // In practice, this condition check should never be reached
             default:
-                System.Console.WriteLine("WARNING: Enemy unexpectedly missing state.");
-                return true;
+                throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has a non-standard enemy state while using base PerformAction function.");
         }
     }
 }
