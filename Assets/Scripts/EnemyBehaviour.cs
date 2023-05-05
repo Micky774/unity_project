@@ -1,11 +1,14 @@
+/// \file Framework classes for Enemy actions and implementations thereof
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 /// <summary>
-/// Enemy state corresponding to level of awareness of player
+/// Enemy's level of involvement with the player
 /// </summary>
-public enum ENEMY_STATE{
+public enum ENEMY_STATE
+{
     /// <summary>
     /// Enemy is unaware of player
     /// </summary>
@@ -21,28 +24,30 @@ public enum ENEMY_STATE{
 }
 
 /// <summary>
-/// Exception thrown if a behaviour is used in an unintended state
+/// Exception thrown if an EnemyBehaviour is used in an unintended ENEMY_STATE
 /// </summary>
-public class InvalidEnemyStateException : System.Exception{
+public class InvalidEnemyStateException : System.ArgumentException
+{
     /// <summary>
-    /// Throws an exception with given error message.
+    /// Throws an exception with a given error message.
     /// </summary>
     /// <param name="message"> Error message </param>
-    public InvalidEnemyStateException(string message)
-        : base(message)
+    public InvalidEnemyStateException(string message) : base(message)
     {
     }
 }
 
 /// <summary>
-/// Abstract class providing framework for enemy actions
+/// Abstract class providing framework for Enemy actions
 /// </summary>
-public abstract class EnemyBehaviour{
+public abstract class EnemyBehaviour
+{
     /// <summary>
-    /// Array that stores intended use data for a behaviour
+    /// Array storing information about intended use of the EnemyBehaviour in different ENEMY_STATEs
     /// </summary>
     /// <remarks>
-    /// Given an ENEMY_STATE state, has the property that _use_case[(int)state] iff state is an intended state for use with current behaviour
+    /// Given an ENEMY_STATE state, has the property that _use_case[(int)state] iff the EnemyBehaviour is designed for use with state.
+    /// An EnemyBehaviour is not designed for use with any state by default, so _use_case is initialized as all false.
     /// </remarks>
     protected bool[] _use_case = new bool[3];
 
@@ -52,73 +57,62 @@ public abstract class EnemyBehaviour{
     protected Rigidbody2D _enemyBody;
 
     /// <summary>
-    /// Checks if a state is an intended use case for the current behaviour
+    /// Checks if an ENEMY_STATE is an intended use case for the EnemyBehaviour
     /// </summary>
-    /// <param name="state"> The state in which the behaviour will be used by an Enemy; null to skip check </param>
-    /// <exception cref="InvalidEnemyStateException"> Thrown if state is an unintended use case </exception>
-    protected void _CheckUseCase(ENEMY_STATE? state){
-        if(state is ENEMY_STATE state_val
-        && !this._use_case[(int)state_val]){
-            throw new InvalidEnemyStateException(
-                this._GenerateExceptionMessage(state_val));
+    /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
+    /// <exception cref="InvalidEnemyStateException"> Thrown if state is not an intended use case for the EnemyBehaviour </exception>
+    protected void _CheckUseCase(ENEMY_STATE? state)
+    {
+        if (state is ENEMY_STATE state_val
+        && !this._use_case[(int)state_val])
+        {
+            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state.");
         }
-    }
-
-    /// <summary>
-    /// Produces error message to be thrown as an InvalidEnemyStateException
-    /// </summary>
-    /// <param name="invalid_state"> The enemy state whose use is unintended with the behaviour </param>
-    /// <returns> Error message string with information about unintended state </returns>
-    protected virtual string _GenerateExceptionMessage(ENEMY_STATE invalid_state){
-        return "INVALID ENEMY STATE ERROR: An EnemyBehaviour in use does not support enemy state " + invalid_state.ToString();
     }
 
     /// <summary>
     /// Performs the next frame of action required for an EnemyBehaviour
     /// </summary>
-    /// <returns> Whether behaviour can be interrupted by state change. </returns>
+    /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
     public abstract bool Act();
 }
 
 /// <summary>
-/// Behaviour in which Enemy does not move or perform any action
+/// EnemyBehaviour in which Enemy does not move or perform any action
 /// </summary>
 /// <remarks>
-/// Intended for use in idle and aware states
+/// Intended for use in idle and aware ENEMY_STATEs
 /// </remarks>
-public class DoNothing : EnemyBehaviour{
+public class DoNothing : EnemyBehaviour
+{
     /// <summary>
     /// Constructs a new DoNothing behaviour
     /// </summary>
-    /// <param name="enemy"> Enemy who will use the behaviour </param>
-    /// <param name="state"> State in which the behaviour will be used </param>
-    public DoNothing(Enemy enemy, ENEMY_STATE? state){
+    /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
+    /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour </param>
+    public DoNothing(Enemy enemy, ENEMY_STATE? state)
+    {
         this._use_case[(int)ENEMY_STATE.idle] = true;
         this._use_case[(int)ENEMY_STATE.aware] = true;
 
-        try{this._CheckUseCase(state);}
-        catch (InvalidEnemyStateException ex){
-            System.Console.WriteLine(ex.Message);
+        try
+        {
+            this._CheckUseCase(state);
+        }
+        catch (InvalidEnemyStateException ex)
+        {
+            Debug.LogException(ex);
         }
 
         this._enemyBody = enemy.GetComponent<Rigidbody2D>();
     }
 
     /// <summary>
-    /// Produces error message to be thrown as an InvalidEnemyStateException
-    /// </summary>
-    /// <param name="invalid_state"> The enemy state whose use is unintended with the behaviour </param>
-    /// <returns> Error message string with information about the combination of behaviour and unintended state </returns>
-    protected override string _GenerateExceptionMessage(ENEMY_STATE invalid_state)
-    {
-        return "INVALID ENEMY STATE ERROR: DoNothing does not support enemy state " + invalid_state.ToString();
-    }
-
-    /// <summary>
     /// Sets the enemy's velocity to zero on the current frame
     /// </summary>
     /// <returns> true </returns>
-    public override bool Act(){
+    public override bool Act()
+    {
         this._enemyBody.velocity = Vector2.zero;
         return true;
     }
@@ -130,7 +124,8 @@ public class DoNothing : EnemyBehaviour{
 /// <remarks>
 /// Intended for use in aware and engaged states
 /// </remarks>
-public class ApproachTarget : EnemyBehaviour{
+public class ApproachTarget : EnemyBehaviour
+{
     protected SpriteRenderer _enemySprite;
     protected Rigidbody2D _target;
     /// <summary>
@@ -150,13 +145,18 @@ public class ApproachTarget : EnemyBehaviour{
     /// <param name="max_speed"> Maximum speed at which enemy can move </param>
     /// <param name="acceleration_rate"> Magnitude of enemy acceleration </param>
     /// <param name="state"> State in which the behaviour will be used </param>
-    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state){
+    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state)
+    {
         this._use_case[(int)ENEMY_STATE.aware] = true;
         this._use_case[(int)ENEMY_STATE.engaged] = true;
 
-        try{this._CheckUseCase(state);}
-        catch (InvalidEnemyStateException ex){
-            System.Console.WriteLine(ex.Message);
+        try
+        {
+            this._CheckUseCase(state);
+        }
+        catch (InvalidEnemyStateException ex)
+        {
+            Debug.LogException(ex);
         }
 
         this._enemyBody = enemy.GetComponent<Rigidbody2D>();
@@ -166,21 +166,8 @@ public class ApproachTarget : EnemyBehaviour{
         this.acceleration_rate = acceleration_rate;
     }
 
-    /// <summary>
-    /// Produces error message to be thrown as an InvalidEnemyStateException
-    /// </summary>
-    /// <param name="invalid_state"> The enemy state whose use is unintended with the behaviour </param>
-    /// <returns> Error message string with information about the combination of behaviour and unintended state </returns>
-    protected override string _GenerateExceptionMessage(ENEMY_STATE invalid_state)
+    public override bool Act()
     {
-        return "INVALID ENEMY STATE ERROR: ApproachTarget does not support enemy state " + invalid_state.ToString();
-    }
-
-    /// <summary>
-    /// Adds a change to enemy's velocity in direction of target for current frame
-    /// </summary>
-    /// <returns> true </returns>
-    public override bool Act(){
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
@@ -191,7 +178,7 @@ public class ApproachTarget : EnemyBehaviour{
 
         // Adds change to enemy's velocity
         this._enemyBody.velocity = Vector2.ClampMagnitude(this._enemyBody.velocity + delta_v, this.max_speed);
-        
+
         return true;
     }
 }
