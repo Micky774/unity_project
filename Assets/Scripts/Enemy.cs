@@ -55,11 +55,11 @@ public abstract class Enemy : MonoBehaviour
         switch (this._state)
         {
             case ENEMY_STATE.idle:
-                return _idleBehaviour.Act();
+                return this._idleBehaviour.Act();
             case ENEMY_STATE.aware:
-                return _awareBehaviour.Act();
+                return this._awareBehaviour.Act();
             case ENEMY_STATE.engaged:
-                return _engagedBehaviour.Act();
+                return this._engagedBehaviour.Act();
             default:
                 throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has a non-standard enemy state while using base PerformAction function.");
         }
