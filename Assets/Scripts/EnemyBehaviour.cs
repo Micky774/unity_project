@@ -14,7 +14,7 @@ public enum ENEMY_STATE
     /// </summary>
     idle = 0,
     /// <summary>
-    /// Enemy is aware of player but not engaged in conflict
+    /// Enemy is aware of player but not engaged in combat
     /// </summary>
     aware = 1,
     /// <summary>
