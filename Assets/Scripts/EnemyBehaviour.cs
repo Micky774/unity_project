@@ -7,8 +7,7 @@ using UnityEngine;
 /// <summary>
 /// Enemy's level of involvement with the player
 /// </summary>
-public enum ENEMY_STATE
-{
+public enum ENEMY_STATE {
     /// <summary>
     /// Enemy is unaware of player
     /// </summary>
@@ -26,22 +25,18 @@ public enum ENEMY_STATE
 /// <summary>
 /// Exception thrown in the event that an ENEMY_STATE value is incompatible with a function
 /// </summary>
-public class InvalidEnemyStateException : System.ArgumentException
-{
+public class InvalidEnemyStateException : System.ArgumentException {
     /// <summary>
     /// Throws an exception with a given error message.
     /// </summary>
     /// <param name="message"> Error message </param>
-    public InvalidEnemyStateException(string message) : base(message)
-    {
-    }
+    public InvalidEnemyStateException(string message) : base(message) { }
 }
 
 /// <summary>
 /// Abstract class providing framework for Enemy actions
 /// </summary>
-public abstract class EnemyBehaviour
-{
+public abstract class EnemyBehaviour {
     /// <summary>
     /// Array storing information about intended use of the EnemyBehaviour in different ENEMY_STATEs
     /// </summary>
@@ -61,11 +56,9 @@ public abstract class EnemyBehaviour
     /// </summary>
     /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
     /// <exception cref="InvalidEnemyStateException"> Thrown if state is not an intended use case for the EnemyBehaviour </exception>
-    protected void _CheckUseCase(ENEMY_STATE? state)
-    {
+    protected void _CheckUseCase(ENEMY_STATE? state) {
         if (state is ENEMY_STATE state_val
-        && !this._use_case[(int)state_val])
-        {
+        && !this._use_case[(int)state_val]) {
             throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state.");
         }
     }
@@ -83,24 +76,19 @@ public abstract class EnemyBehaviour
 /// <remarks>
 /// Intended for use in idle and aware ENEMY_STATEs
 /// </remarks>
-public class DoNothing : EnemyBehaviour
-{
+public class DoNothing : EnemyBehaviour {
     /// <summary>
     /// Constructs a new DoNothing behaviour
     /// </summary>
     /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
-    public DoNothing(Enemy enemy, ENEMY_STATE? state)
-    {
+    public DoNothing(Enemy enemy, ENEMY_STATE? state) {
         this._use_case[(int)ENEMY_STATE.idle] = true;
         this._use_case[(int)ENEMY_STATE.aware] = true;
 
-        try
-        {
+        try {
             this._CheckUseCase(state);
-        }
-        catch (InvalidEnemyStateException ex)
-        {
+        } catch (InvalidEnemyStateException ex) {
             Debug.LogException(ex);
         }
 
@@ -111,8 +99,7 @@ public class DoNothing : EnemyBehaviour
     /// Sets the Enemy's velocity to zero on the current frame
     /// </summary>
     /// <returns> true </returns>
-    public override bool Act()
-    {
+    public override bool Act() {
         this._enemyBody.velocity = Vector2.zero;
         return true;
     }
@@ -124,8 +111,7 @@ public class DoNothing : EnemyBehaviour
 /// <remarks>
 /// Intended for use in aware and engaged states
 /// </remarks>
-public class ApproachTarget : EnemyBehaviour
-{
+public class ApproachTarget : EnemyBehaviour {
     /// <summary>
     /// Enemy SpriteRenderer
     /// </summary>
@@ -154,17 +140,13 @@ public class ApproachTarget : EnemyBehaviour
     /// <param name="max_speed"> Maximum speed at which Enemy can move </param>
     /// <param name="acceleration_rate"> Magnitude of Enemy acceleration </param>
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
-    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state)
-    {
+    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
         this._use_case[(int)ENEMY_STATE.aware] = true;
         this._use_case[(int)ENEMY_STATE.engaged] = true;
 
-        try
-        {
+        try {
             this._CheckUseCase(state);
-        }
-        catch (InvalidEnemyStateException ex)
-        {
+        } catch (InvalidEnemyStateException ex) {
             Debug.LogException(ex);
         }
 
@@ -179,8 +161,7 @@ public class ApproachTarget : EnemyBehaviour
     /// Increases Enemy's velocity in direction of _target
     /// </summary>
     /// <returns> true </returns>
-    public override bool Act()
-    {
+    public override bool Act() {
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
