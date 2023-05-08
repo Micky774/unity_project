@@ -11,6 +11,7 @@ public class Enemy : MonoBehaviour
     // Start is called before the first frame update
     public float max_speed = 4;
     public float acceleration_rate = 1;
+
     private void Awake(){
         myRigidbody = GetComponent<Rigidbody2D>();
         mySprite = GetComponent<SpriteRenderer>();
@@ -24,12 +25,17 @@ public class Enemy : MonoBehaviour
     void Update()
     {
         // Used to normalize updates across various frame-rates
-        float time_step = Time.fixedDeltaTime;
+        float dt = Time.fixedDeltaTime;
+        Vector2 dx = player.position - myRigidbody.position;
 
-        // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = player.position - myRigidbody.position;
-        mySprite.flipX = acceleration.x <= 0;
-        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
+        // standard tracking of player movement
+        PlayerTrack(dx, dt);
+    }
+
+    void PlayerTrack(Vector2 dx, float dt)
+    {
+        mySprite.flipX = dx.x <= 0;
+        Vector2 acceleration = (dx / dx.magnitude) * acceleration_rate * dt;
         myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
     }
 }
