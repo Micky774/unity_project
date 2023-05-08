@@ -10,8 +10,7 @@ public abstract class Enemy : MonoBehaviour
     // Each enemy state has a corresponding behaviour the enemy performs while in that state
     /* 
      * TODO: Research if there's a more computationally efficient way to allow editing of EnemyBehaviour members in Inspector than serializing the EnemyBehaviours by reference.
-     * Example possibilities include defining a custom Editor subclass to add EnemyBehaviour members to Inspector
-     * As of 5/6/2023, the project is small enough that the overhead of [SerializeReference] is negligible. This is impermanent and experimentation will be required.
+     * Example possibilities include defining a custom Editor subclass to add EnemyBehaviour members to Inspector.
      */
     [SerializeReference]
     protected EnemyBehaviour _idleBehaviour, _awareBehaviour, _engagedBehaviour;
