@@ -2,27 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Enemy : MonoBehaviour
-{
+public class Enemy : MonoBehaviour {
     public float max_speed = 4;
     public float acceleration_rate = 1;
     public Rigidbody2D player;
 
     private Rigidbody2D _myRigidbody;
     private SpriteRenderer _mySprite;
-    
-    protected void Awake(){
+
+    protected void Awake() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._mySprite = this.GetComponent<SpriteRenderer>();
     }
-    protected void Start()
-    {
+    protected void Start() {
         this.player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
     }
 
     // Update is called once per frame
-    protected void Update()
-    {
+    protected void Update() {
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
