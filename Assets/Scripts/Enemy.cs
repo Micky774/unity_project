@@ -64,13 +64,7 @@ public abstract class Enemy : MonoBehaviour {
         if(this._can_change_state) {
             this.UpdateState();
         }
-        try {
-            this._can_change_state = this.PerformAction();
-        } catch(InvalidEnemyStateException ex) {
-            Debug.LogException(ex);
-            this._state = ENEMY_STATE.idle;
-            this._can_change_state = true;
-        }
+        this._can_change_state = this.PerformAction();
     }
 
     /// <summary>
