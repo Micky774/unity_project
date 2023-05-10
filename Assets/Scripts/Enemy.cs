@@ -5,8 +5,7 @@ using UnityEngine;
 /*
  * Abstract class providing framework for enemy script design
  */
-public abstract class Enemy : MonoBehaviour
-{
+public abstract class Enemy : MonoBehaviour {
     // Each enemy state has a corresponding behaviour the enemy performs while in that state
     /* 
      * TODO: Research if there's a more computationally efficient way to allow editing of EnemyBehaviour members in Inspector than serializing the EnemyBehaviours by reference.
@@ -27,18 +26,13 @@ public abstract class Enemy : MonoBehaviour
 
     // We perform updates to enemies on FixedUpdate since they are physics objects
     // FixedUpdate is virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
-    protected virtual void FixedUpdate()
-    {
-        if (this._can_change_state)
-        {
+    protected virtual void FixedUpdate() {
+        if(this._can_change_state) {
             this.ChangeState();
         }
-        try
-        {
+        try {
             this._can_change_state = this.PerformAction();
-        }
-        catch (InvalidEnemyStateException ex)
-        {
+        } catch(InvalidEnemyStateException ex) {
             Debug.LogException(ex);
             this._state = ENEMY_STATE.idle;
             this._can_change_state = true;
@@ -49,10 +43,8 @@ public abstract class Enemy : MonoBehaviour
     protected abstract void ChangeState();
 
     // PerformAction is virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
-    protected virtual bool PerformAction()
-    {
-        switch (this._state)
-        {
+    protected virtual bool PerformAction() {
+        switch(this._state) {
             case ENEMY_STATE.idle:
                 return this._idleBehaviour.Act();
             case ENEMY_STATE.aware:

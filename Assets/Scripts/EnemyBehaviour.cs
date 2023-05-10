@@ -57,7 +57,7 @@ public abstract class EnemyBehaviour {
     /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
     /// <exception cref="InvalidEnemyStateException"> Thrown if state is not an intended use case for the EnemyBehaviour </exception>
     protected void _CheckUseCase(ENEMY_STATE? state) {
-        if (
+        if(
             state is ENEMY_STATE state_val
             && !this._use_case[(int)state_val]
         ) {
@@ -90,7 +90,7 @@ public class DoNothing : EnemyBehaviour {
 
         try {
             this._CheckUseCase(state);
-        } catch (InvalidEnemyStateException ex) {
+        } catch(InvalidEnemyStateException ex) {
             Debug.LogException(ex);
         }
 
@@ -148,7 +148,7 @@ public class ApproachTarget : EnemyBehaviour {
 
         try {
             this._CheckUseCase(state);
-        } catch (InvalidEnemyStateException ex) {
+        } catch(InvalidEnemyStateException ex) {
             Debug.LogException(ex);
         }
 

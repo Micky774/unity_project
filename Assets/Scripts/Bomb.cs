@@ -2,8 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bomb : Enemy
-{
+public class Bomb : Enemy {
     // These are only initial values for behaviour construction
     private const float _MAX_SPEED = 4;
     private const float _ACCELERATION_RATE = 1;
@@ -11,8 +10,7 @@ public class Bomb : Enemy
     private Rigidbody2D _player;
 
     // Bomb does nothing while idle, approaches player otherwise
-    protected override void Start()
-    {
+    protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
 
@@ -25,19 +23,13 @@ public class Bomb : Enemy
     }
 
     // Bomb aware of player within 100 units, engaged within 50.
-    protected override void ChangeState()
-    {
+    protected override void ChangeState() {
         float dist_to_player = (this._myRigidbody.position - this._player.position).magnitude;
-        if (dist_to_player < 50)
-        {
+        if(dist_to_player < 50) {
             this._state = ENEMY_STATE.engaged;
-        }
-        else if (dist_to_player < 100)
-        {
+        } else if(dist_to_player < 100) {
             this._state = ENEMY_STATE.aware;
-        }
-        else
-        {
+        } else {
             this._state = ENEMY_STATE.idle;
         }
 
