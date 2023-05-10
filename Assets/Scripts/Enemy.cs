@@ -2,30 +2,64 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-/*
- * Abstract class providing framework for enemy script design
- */
+/// <summary>
+/// Abstract class providing framework for Enemy design
+/// </summary>
 public abstract class Enemy : MonoBehaviour {
-    // Each enemy state has a corresponding behaviour the enemy performs while in that state
-    /* 
-     * TODO: Research if there's a more computationally efficient way to allow editing of EnemyBehaviour members in Inspector than serializing the EnemyBehaviours by reference.
-     * Example possibilities include defining a custom Editor subclass to add EnemyBehaviour members to Inspector.
-     */
+    /// <summary>
+    /// EnemyBehaviour performed when Enemy is in idle ENEMY_STATE
+    /// </summary>
     [SerializeReference]
-    protected EnemyBehaviour _idleBehaviour, _awareBehaviour, _engagedBehaviour;
-    // We assume by default that every enemy is initially unaware of the player
+    protected EnemyBehaviour _idleBehaviour;
+    /// <summary>
+    /// EnemyBehaviour performed when Enemy is in aware ENEMY_STATE
+    /// </summary>
+    [SerializeReference]
+    protected EnemyBehaviour _awareBehaviour;
+    /// <summary>
+    /// EnemyBehaviour performed when Enemy is in engaged ENEMY_STATE
+    /// </summary>
+    [SerializeReference]
+    protected EnemyBehaviour _engagedBehaviour;
+
+    /// <summary>
+    /// Enemy's current level of involvement with the player
+    /// </summary>
+    /// <remarks>
+    /// Initialized as idle for most enemies.
+    /// This reflects an assertion that most enemies should be unaware of the player when first instantiated.
+    /// </remarks>
     protected ENEMY_STATE _state = ENEMY_STATE.idle;
-    // By initializing this as true, we ensure an enemy can change state on its first frame
+
+    /// <summary>
+    /// Whether the Enemy is capable of interrupting its current EnemyBehaviour and changing the value of _state
+    /// </summary>
+    /// <remarks>
+    /// Initialized as true for most enemies.
+    /// This reflects an assertion that most enemies should be able to determine their level of awareness of the player on their first active frame.
+    /// </remarks>
     protected bool _can_change_state = true;
 
-    // We assume all enemies will have a Rigidbody2D for collision purposes
+    /// <summary>
+    /// Enemy's Rigidbody2D
+    /// </summary>
     protected Rigidbody2D _myRigidbody;
 
-    // We enforce that an enemy define a Start method to initialize its enemy-specific behaviours
+    /// <summary>
+    /// Initializes Enemy's behaviours and other instance variables
+    /// </summary>
+    /// <remarks>
+    /// Runs on the first frame a script is enabled before Update is called
+    /// </remarks>
     protected abstract void Start();
 
-    // We perform updates to enemies on FixedUpdate since they are physics objects
-    // FixedUpdate is virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
+    /// <summary>
+    /// Determines Enemy's _state and performs corresponding action for current physics tick
+    /// </summary>
+    /// <remarks>
+    /// Enemies should be synced to the physics tickrate because they're physics objects.
+    /// Virtual to allow overriding by custom non-state-based Enemies (such as bosses, potentially).
+    /// </remarks>
     protected virtual void FixedUpdate() {
         if(this._can_change_state) {
             this.ChangeState();
@@ -39,10 +73,19 @@ public abstract class Enemy : MonoBehaviour {
         }
     }
 
-    // We currently enforce that an enemy define a ChangeState method to determine the enemy-specific conditions under which it becomes idle, aware, and engaged.
+    /// <summary>
+    /// Changes _state based on enemy-specific conditions
+    /// </summary>
     protected abstract void ChangeState();
 
-    // PerformAction is virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
+    /// <summary>
+    /// Performs the EnemyBehaviour for current physics tick based on _state
+    /// </summary>
+    /// <returns> Whether Enemy can change _state on the next frame </returns>
+    /// <exception cref="InvalidEnemyStateException"> Thrown if _state is not a valid ENEMY_STATE value </exception>
+    /// <remarks>
+    /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
+    /// </remarks>
     protected virtual bool PerformAction() {
         switch(this._state) {
             case ENEMY_STATE.idle:

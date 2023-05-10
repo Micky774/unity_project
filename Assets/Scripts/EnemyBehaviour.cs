@@ -17,7 +17,7 @@ public enum ENEMY_STATE {
     /// </summary>
     aware = 1,
     /// <summary>
-    /// Enemy is engaged in conflict with player
+    /// Enemy is engaged in combat with player
     /// </summary>
     engaged = 2
 }
