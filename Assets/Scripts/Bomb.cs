@@ -52,13 +52,13 @@ public class Bomb : Enemy {
     /// </remarks>
     protected override void ChangeState() {
         float dist_to_player = (this._myRigidbody.position - this._player.position).magnitude;
+        ENEMY_STATE state = ENEMY_STATE.idle;
         if(dist_to_player < 50) {
-            this._state = ENEMY_STATE.engaged;
+            state = ENEMY_STATE.engaged;
         } else if(dist_to_player < 100) {
-            this._state = ENEMY_STATE.aware;
-        } else {
-            this._state = ENEMY_STATE.idle;
-        }
+            state = ENEMY_STATE.aware;
+        } 
+        this._state = state;
 
         // Use the following line of code to check that _state changes
         // Debug.Log("My distance to the player is " + dist_to_player + " so my current enemy state is " + this._state);
