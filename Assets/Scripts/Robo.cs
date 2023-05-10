@@ -31,7 +31,7 @@ public class Robo : MonoBehaviour {
         this._rigidbody = this.GetComponent<Rigidbody2D>();
     }
     protected void Awake() {
-        if (this.playerInputs == null) {
+        if(this.playerInputs == null) {
             this.playerInputs = new PlayerInputs();
         }
     }

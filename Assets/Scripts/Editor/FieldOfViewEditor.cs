@@ -19,7 +19,7 @@ public class FieldOfViewEditor : Editor {
         Debug.DrawRay(fov.transform.position, view_angle_start * fov.view_radius);
         Debug.DrawRay(fov.transform.position, view_angle_end * fov.view_radius);
         Handles.color = Color.red;
-        foreach (Transform visibleTarget in fov.visibleTargets) {
+        foreach(Transform visibleTarget in fov.visibleTargets) {
             Handles.DrawLine(fov.transform.position, visibleTarget.position);
         }
     }
