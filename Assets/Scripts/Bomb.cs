@@ -50,7 +50,7 @@ public class Bomb : Enemy {
     /// <remarks>
     /// Bomb is idle when at least 100 units from player, aware when at least 50 but less than 100 units from player, and engaged when less than 50 units from player.
     /// </remarks>
-    protected override void ChangeState() {
+    protected override void UpdateState() {
         float dist_to_player = (this._myRigidbody.position - this._player.position).magnitude;
         ENEMY_STATE state = ENEMY_STATE.idle;
         if(dist_to_player < 50) {

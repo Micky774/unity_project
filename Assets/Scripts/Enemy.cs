@@ -62,7 +62,7 @@ public abstract class Enemy : MonoBehaviour {
     /// </remarks>
     protected virtual void FixedUpdate() {
         if(this._can_change_state) {
-            this.ChangeState();
+            this.UpdateState();
         }
         try {
             this._can_change_state = this.PerformAction();
@@ -74,9 +74,9 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     /// <summary>
-    /// Changes _state based on enemy-specific conditions
+    /// Updates _state based on enemy-specific conditions
     /// </summary>
-    protected abstract void ChangeState();
+    protected abstract void UpdateState();
 
     /// <summary>
     /// Performs the EnemyBehaviour for current physics tick based on _state
