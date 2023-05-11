@@ -3,6 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEditor;
 
+/// <summary>
+/// Custom Editor providing visual feedback for a FieldOfView
+/// </summary>
+/// <remarks>
+/// Currently draws a white vision cone corresponding to a FieldOfView and a red line to visibleTargets in the FieldOfView
+/// </remarks>
 [CustomEditor(typeof(FieldOfView))]
 public class FieldOfViewEditor : Editor {
     protected void OnSceneGUI() {

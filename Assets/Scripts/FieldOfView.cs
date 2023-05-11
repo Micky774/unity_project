@@ -2,23 +2,54 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Controllable player vision cone
+/// </summary>
 public class FieldOfView : MonoBehaviour {
+    /// <summary>
+    /// Max view distance from observer
+    /// </summary>
     public float view_radius = 10;
+    /// <summary>
+    /// Vision cone angle
+    /// </summary>
     [Range(0, 360)]
     public float view_angle = 90;
+    /// <summary>
+    /// Layer of targets to be detected
+    /// </summary>
     public LayerMask targetMask;
+    /// <summary>
+    /// Layer of walls that block vision
+    /// </summary>
     public LayerMask wallMask;
+    /// <summary>
+    /// List of target positions
+    /// </summary>
     public List<Transform> visibleTargets = new List<Transform>();
 
+    /// <summary>
+    /// Begins _FindTargetsWithDelay coroutine
+    /// </summary>
     protected void Start() {
         StartCoroutine(this._FindTargetsWithDelay(.1f));
     }
+
+    /// <summary>
+    /// Loop checks for visible targets within vision cone periodically
+    /// </summary>
+    /// <param name="delay"> Time to wait between checks for targets </param>
+    /// <returns> Coroutine reference </returns>
     private IEnumerator _FindTargetsWithDelay(float delay) {
         while(true) {
             yield return new WaitForSeconds(delay);
             this._FindVisibleTargets();
         }
     }
+
+    /// <summary>
+    /// Checks for visible targets within vision cone
+    /// </summary>
     private void _FindVisibleTargets() {
         this.visibleTargets.Clear();
         Vector3 cursor_position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -40,7 +71,13 @@ public class FieldOfView : MonoBehaviour {
         }
     }
 
-
+    // TODO: Document DirFromAngle
+    /// <summary>
+    /// Scary angle conversion formula
+    /// </summary>
+    /// <param name="angle_degrees"></param>
+    /// <param name="angle_is_global"></param>
+    /// <returns></returns>
     public Vector2 DirFromAngle(float angle_degrees, bool angle_is_global = false) {
         if(!angle_is_global) {
             angle_degrees += this.transform.eulerAngles.z;

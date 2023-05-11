@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Utilities {
+    /// <summary>
+    /// Calculates global angle of displacement vector within the scene's plane
+    /// </summary>
+    /// <param name="displacement"> Displacement vector whose angle is to be calculated </param>
+    /// <returns> Quaternion corresponding to this angle </returns>
     public static Quaternion GetGlobalRotation(Vector2 displacement) {
         float angle = Mathf.Atan(displacement.x / displacement.y);
         float offset = displacement.y > 0 ? Mathf.PI : 0;
