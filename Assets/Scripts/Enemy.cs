@@ -7,20 +7,9 @@ using UnityEngine;
 /// </summary>
 public abstract class Enemy : MonoBehaviour {
     /// <summary>
-    /// EnemyBehaviour performed when Enemy is in idle ENEMY_STATE
+    /// Dictionary of EnemyBehaviours to be used by Enemy in associated ENEMY_STATE
     /// </summary>
-    [SerializeReference]
-    protected EnemyBehaviour _idleBehaviour;
-    /// <summary>
-    /// EnemyBehaviour performed when Enemy is in aware ENEMY_STATE
-    /// </summary>
-    [SerializeReference]
-    protected EnemyBehaviour _awareBehaviour;
-    /// <summary>
-    /// EnemyBehaviour performed when Enemy is in engaged ENEMY_STATE
-    /// </summary>
-    [SerializeReference]
-    protected EnemyBehaviour _engagedBehaviour;
+    protected IDictionary<ENEMY_STATE, EnemyBehaviour> _behaviours = new Dictionary<ENEMY_STATE, EnemyBehaviour>();
 
     /// <summary>
     /// Enemy's current level of involvement with the player
@@ -76,20 +65,15 @@ public abstract class Enemy : MonoBehaviour {
     /// Performs the EnemyBehaviour for current physics tick based on _state
     /// </summary>
     /// <returns> Whether Enemy can change _state on the next frame </returns>
-    /// <exception cref="InvalidEnemyStateException"> Thrown if _state is not a valid ENEMY_STATE value </exception>
+    /// <exception cref="InvalidEnemyStateException"> Thrown if Enemy does not have an EnemyBehaviour associated with _state </exception>
     /// <remarks>
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
     protected virtual bool PerformAction() {
-        switch(this._state) {
-            case ENEMY_STATE.idle:
-                return this._idleBehaviour.Act();
-            case ENEMY_STATE.aware:
-                return this._awareBehaviour.Act();
-            case ENEMY_STATE.engaged:
-                return this._engagedBehaviour.Act();
-            default:
-                throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has a non-standard enemy state while using base PerformAction function.");
+        if(this._behaviours.TryGetValue(this._state, out EnemyBehaviour action)) {
+            return action.Act();
+        } else {
+            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
         }
     }
 }

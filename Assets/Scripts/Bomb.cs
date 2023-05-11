@@ -35,13 +35,9 @@ public class Bomb : Enemy {
     protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-
-        // Uncomment this to check InvalidEnemyStateException checking
-        //this._idleBehaviour = new ApproachTarget(this, _player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.idle);
-
-        this._idleBehaviour = new DoNothing(this, ENEMY_STATE.idle);
-        this._awareBehaviour = new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware);
-        this._engagedBehaviour = new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged);
+        this._behaviours.Add(ENEMY_STATE.idle, new DoNothing(this, ENEMY_STATE.idle));
+        this._behaviours.Add(ENEMY_STATE.aware, new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware));
+        this._behaviours.Add(ENEMY_STATE.engaged, new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged));
     }
 
     /// <summary>
@@ -57,7 +53,7 @@ public class Bomb : Enemy {
             state = ENEMY_STATE.engaged;
         } else if(dist_to_player < 100) {
             state = ENEMY_STATE.aware;
-        } 
+        }
         this._state = state;
 
         // Use the following line of code to check that _state changes
