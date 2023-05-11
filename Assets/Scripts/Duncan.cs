@@ -27,7 +27,7 @@ public class Duncan : MonoBehaviour {
     /// <param name="collision"> Details of collision </param>
     protected void OnCollisionEnter2D(Collision2D collision) {
         ContactPoint2D contact = collision.contacts[0];
-        if (contact.collider.gameObject.tag == "Wall") {
+        if(contact.collider.gameObject.tag == "Wall") {
             Object.Destroy(this.gameObject);
         }
     }
