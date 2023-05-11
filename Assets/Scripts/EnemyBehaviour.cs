@@ -66,6 +66,16 @@ public abstract class EnemyBehaviour {
     }
 
     /// <summary>
+    /// Sets intended use cases for an EnemyBehaviour
+    /// </summary>
+    /// <param name="states"> ENEMY_STATES in which the EnemyBehaviour is intended to be used</param>
+    protected void _SetUseCase(params ENEMY_STATE[] states) {
+        foreach(ENEMY_STATE state in states) {
+            this._use_case[(int)state] = true;
+        }
+    }
+
+    /// <summary>
     /// Performs the next frame of action required for an EnemyBehaviour
     /// </summary>
     /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
@@ -85,8 +95,7 @@ public class DoNothing : EnemyBehaviour {
     /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
     public DoNothing(Enemy enemy, ENEMY_STATE? state) {
-        this._use_case[(int)ENEMY_STATE.idle] = true;
-        this._use_case[(int)ENEMY_STATE.aware] = true;
+        this._SetUseCase(ENEMY_STATE.idle, ENEMY_STATE.aware);
 
         try {
             this._CheckUseCase(state);
@@ -143,8 +152,7 @@ public class ApproachTarget : EnemyBehaviour {
     /// <param name="acceleration_rate"> Magnitude of Enemy acceleration </param>
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
     public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
-        this._use_case[(int)ENEMY_STATE.aware] = true;
-        this._use_case[(int)ENEMY_STATE.engaged] = true;
+        this._SetUseCase(ENEMY_STATE.aware, ENEMY_STATE.engaged);
 
         try {
             this._CheckUseCase(state);
