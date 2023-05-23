@@ -60,3 +60,29 @@ crashlytics-build.properties
 
 # Ignore user settings
 /UserSettings
+
+# Ignore Ez Define Symbols extension
+/[Aa]ssets/Ez/*
+/[Aa]ssets/Plugins/*
+
+# Un-ignore custom Ez Define Symbols files
+![Aa]ssets/Plugins/Quick
+[Aa]ssets/Plugins/Quick/*
+![Aa]ssets/Plugins/Quick/Editor
+[Aa]ssets/Plugins/Quick/Editor/*
+![Aa]ssets/Plugins/Quick/Editor/Utils
+[Aa]ssets/Plugins/Quick/Editor/Utils/*
+!/[Aa]ssets/Plugins/Quick/Editor/Utils/QUtils.cs
+
+# Un-ignore Ez Define Symbols presets
+![Aa]ssets/Ez/DefineSymbols
+[Aa]ssets/Ez/DefineSymbols/*
+![Aa]ssets/Ez/DefineSymbols/Editor
+[Aa]ssets/Ez/DefineSymbols/Editor/*
+![Aa]ssets/Ez/DefineSymbols/Editor/Resources
+[Aa]ssets/Ez/DefineSymbols/Editor/Resources/*
+![Aa]ssets/Ez/DefineSymbols/Editor/Resources/EZT
+[Aa]ssets/Ez/DefineSymbols/Editor/Resources/EZT/*
+![Aa]ssets/Ez/DefineSymbols/Editor/Resources/EZT/DefineSymbols
+[Aa]ssets/Ez/DefineSymbols/Editor/Resources/EZT/DefineSymbols/*
+!/[Aa]ssets/Ez/DefineSymbols/Editor/Resources/EZT/DefineSymbols/Presets
