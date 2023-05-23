@@ -64,6 +64,8 @@ crashlytics-build.properties
 # Ignore Ez Define Symbols extension
 /[Aa]ssets/Ez/*
 /[Aa]ssets/Plugins/*
+/[Aa]ssets/Ez.meta
+/[Aa]ssets/Plugins.meta
 
 # Un-ignore custom Ez Define Symbols files
 ![Aa]ssets/Plugins/Quick
