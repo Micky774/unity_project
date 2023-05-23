@@ -67,15 +67,6 @@ crashlytics-build.properties
 /[Aa]ssets/Ez.meta
 /[Aa]ssets/Plugins.meta
 
-# Un-ignore custom Ez Define Symbols files
-![Aa]ssets/Plugins/Quick
-[Aa]ssets/Plugins/Quick/*
-![Aa]ssets/Plugins/Quick/Editor
-[Aa]ssets/Plugins/Quick/Editor/*
-![Aa]ssets/Plugins/Quick/Editor/Utils
-[Aa]ssets/Plugins/Quick/Editor/Utils/*
-!/[Aa]ssets/Plugins/Quick/Editor/Utils/QUtils.cs
-
 # Un-ignore Ez Define Symbols presets
 ![Aa]ssets/Ez/DefineSymbols
 [Aa]ssets/Ez/DefineSymbols/*
