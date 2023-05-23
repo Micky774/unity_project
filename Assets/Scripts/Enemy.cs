@@ -1,64 +1,130 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
-public class Enemy : MonoBehaviour
-{
-
-    private Rigidbody2D myRigidbody;
-    private SpriteRenderer mySprite;
-    public Rigidbody2D player;
-    // Start is called before the first frame update
-    public float max_speed = 4;
-    public float acceleration_rate = 1;
+/// <summary>
+/// Abstract class providing framework for Enemy design
+/// </summary>
+public abstract class Enemy : MonoBehaviour {
+    /// <summary>
+    /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
+    /// </summary>
+    protected IDictionary<ENEMY_STATE, (EnemyBehaviour, Action)> _behaviours = new Dictionary<ENEMY_STATE, (EnemyBehaviour, Action)>();
 
     // Variables for health and damage management
-    public int max_health = 100;
-    public int curr_health;
-    public int damage = 1;
+    protected int _max_health;
+    protected int _curr_health;
 
-    private void Awake(){
-        myRigidbody = GetComponent<Rigidbody2D>();
-        mySprite = GetComponent<SpriteRenderer>();
+    /// <summary>
+    /// Enemy's current level of involvement with the player
+    /// </summary>
+    /// <remarks>
+    /// Initialized as idle for most enemies.
+    /// This reflects an assertion that most enemies should be unaware of the player when first instantiated.
+    /// </remarks>
+    protected ENEMY_STATE _state = ENEMY_STATE.idle;
+
+    /// <summary>
+    /// Whether the Enemy is capable of interrupting its current EnemyBehaviour and changing the value of _state
+    /// </summary>
+    /// <remarks>
+    /// Initialized as true for most enemies.
+    /// This reflects an assertion that most enemies should be able to determine their level of awareness of the player on their first active frame.
+    /// </remarks>
+    protected bool _can_change_state = true;
+
+    /// <summary>
+    /// Enemy's Rigidbody2D
+    /// </summary>
+    protected Rigidbody2D _myRigidbody;
+
+    /// <summary>
+    /// Enemy's SpriteRenderer
+    /// </summary>
+    protected SpriteRenderer _mySprite;
+
+    /// <summary>
+    /// Vector in direction of attempted Enemy acceleration
+    /// </summary>
+    /// <remarks>
+    /// In current implementation, there are multiple important notes: <para/>
+    /// 1. This is not necessarily a unit vector. <para/>
+    /// 2. This is not the direction of actual enemy acceleration after collisions are factored in.
+    /// This is the direction in which an Enemy is currently trying to accelerate based on its EnemyBehaviours. <para/
+    /// 3. Initialized as a zero vector on frame 1 for most enemies.
+    /// </remarks>
+    protected Vector2 _acceleration_dir = Vector2.zero;
+
+    /// <summary>
+    /// Initializes Enemy's behaviours and other instance variables
+    /// </summary>
+    /// <remarks>
+    /// Runs on the first frame a script is enabled before Update is called
+    /// </remarks>
+    protected abstract void Start();
+
+    /// <summary>
+    /// Determines Enemy's _state and performs corresponding action for current physics tick
+    /// </summary>
+    /// <remarks>
+    /// Enemies should be synced to the physics tickrate because they're physics objects.
+    /// Virtual to allow overriding by custom non-state-based Enemies (such as bosses, potentially).
+    /// </remarks>
+    protected virtual void FixedUpdate() {
+        if(this._can_change_state) {
+            this.UpdateState();
+        }
+        this._can_change_state = this.PerformAction();
     }
-    void Start()
-    {
-        curr_health = max_health;
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-    }
 
-    // Update is called once per frame
-    void Update()
-    {
-        // Used to normalize updates across various frame-rates
-        float time_step = Time.fixedDeltaTime;
+    /// <summary>
+    /// Updates _state based on enemy-specific conditions
+    /// </summary>
+    protected abstract void UpdateState();
 
-        // Constructs a unit-vector along one of the eight digital directions
-        Vector2 acceleration = player.position - myRigidbody.position;
-        mySprite.flipX = acceleration.x <= 0;
-        acceleration *= time_step * acceleration_rate / acceleration.magnitude;
-        myRigidbody.velocity = Vector2.ClampMagnitude(myRigidbody.velocity + acceleration, max_speed);
+    /// <summary>
+    /// Performs the EnemyBehaviour for current physics tick based on _state
+    /// </summary>
+    /// <returns> Whether Enemy can change _state on the next frame </returns>
+    /// <exception cref="InvalidEnemyStateException"> Thrown if Enemy does not have an EnemyBehaviour associated with _state </exception>
+    /// <remarks>
+    /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
+    /// </remarks>
+    protected virtual bool PerformAction() {
+        if(this._behaviours.TryGetValue(this._state, out (EnemyBehaviour, Action) action)) {
+            bool return_val = action.Item1.Act(out this._acceleration_dir);
+            action.Item2();
+            return return_val;
+        } else {
+            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
+        }
     }
 
     public void TakeDamage(int damage) {
-        curr_health = Mathf.Clamp(curr_health - damage, 0, max_health);
+        _curr_health = Mathf.Clamp(_curr_health - damage, 0, _max_health);
 
-        if(curr_health == 0){
+        if(_curr_health == 0){
             OnDeath();
         }
     }    
 
-    // Runs once every frame during which a collision is occurring
-    void OnCollisionStay2D(Collision2D collision) {
-        ContactPoint2D contact = collision.contacts[0];
-        GameObject hit_object = contact.collider.gameObject;
-
-        if(hit_object.tag == "Player"){
-            hit_object.GetComponent<Robo>().TakeDamage(damage);
-        }
-    }
-
     private void OnDeath() {
         Destroy(gameObject);
     }
+
+    /// <summary>
+    /// Handles Enemy animations after performing an idle EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterIdleAnimate();
+
+    /// <summary>
+    /// Handles Enemy animations after performing an aware EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterAwareAnimate();
+
+    /// <summary>
+    /// Handles Enemy Animations after performing an engaged EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterEngagedAnimate();
 }
