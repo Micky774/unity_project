@@ -56,7 +56,8 @@ public class Bomb : Enemy {
         }
         this._state = state;
 
-        // Use the following line of code to check that _state changes
-        // Debug.Log("My distance to the player is " + dist_to_player + " so my current enemy state is " + this._state);
+        #if ENEMY_DEBUG
+        Debug.Log("My distance to the player is " + dist_to_player + " so my current enemy state is " + this._state);
+        #endif
     }
 }
