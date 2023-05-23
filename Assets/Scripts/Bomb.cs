@@ -34,10 +34,11 @@ public class Bomb : Enemy {
     /// </summary>
     protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
+        this._mySprite = this.GetComponent<SpriteRenderer>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        this._behaviours.Add(ENEMY_STATE.idle, new DoNothing(this, ENEMY_STATE.idle));
-        this._behaviours.Add(ENEMY_STATE.aware, new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware));
-        this._behaviours.Add(ENEMY_STATE.engaged, new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged));
+        this._behaviours.Add(ENEMY_STATE.idle, (new DoNothing(this, ENEMY_STATE.idle), AfterIdleAnimate));
+        this._behaviours.Add(ENEMY_STATE.aware, (new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware), AfterAwareAnimate));
+        this._behaviours.Add(ENEMY_STATE.engaged, (new ApproachTarget(this, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged), AfterEngagedAnimate));
     }
 
     /// <summary>
@@ -56,8 +57,31 @@ public class Bomb : Enemy {
         }
         this._state = state;
 
-        #if ENEMY_DEBUG
+#if ENEMY_DEBUG
         Debug.Log("My distance to the player is " + dist_to_player + " so my current enemy state is " + this._state);
-        #endif
+#endif
+    }
+
+    /// <summary>
+    /// Does literally nothing
+    /// </summary>
+    /// <remarks>
+    /// Bombs don't move when idle and have no animation updates to be performed.
+    /// </remarks>
+    protected override void AfterIdleAnimate() {
+    }
+
+    /// <summary>
+    /// Flips Bomb's sprite to match horizontal acceleration
+    /// </summary>
+    protected override void AfterAwareAnimate() {
+        this._mySprite.flipX = this._acceleration_dir.x <= 0;
+    }
+
+    /// <summary>
+    /// Flips Bomb's sprite to match horizontal acceleration
+    /// </summary>
+    protected override void AfterEngagedAnimate() {
+        this._mySprite.flipX = this._acceleration_dir.x <= 0;
     }
 }

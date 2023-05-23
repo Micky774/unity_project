@@ -1,15 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// Abstract class providing framework for Enemy design
 /// </summary>
 public abstract class Enemy : MonoBehaviour {
     /// <summary>
-    /// Dictionary of EnemyBehaviours to be used by Enemy in associated ENEMY_STATE
+    /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
-    protected IDictionary<ENEMY_STATE, EnemyBehaviour> _behaviours = new Dictionary<ENEMY_STATE, EnemyBehaviour>();
+    protected IDictionary<ENEMY_STATE, (EnemyBehaviour, Action)> _behaviours = new Dictionary<ENEMY_STATE, (EnemyBehaviour, Action)>();
 
     /// <summary>
     /// Enemy's current level of involvement with the player
@@ -33,6 +34,23 @@ public abstract class Enemy : MonoBehaviour {
     /// Enemy's Rigidbody2D
     /// </summary>
     protected Rigidbody2D _myRigidbody;
+
+    /// <summary>
+    /// Enemy's SpriteRenderer
+    /// </summary>
+    protected SpriteRenderer _mySprite;
+
+    /// <summary>
+    /// Vector in direction of attempted Enemy acceleration
+    /// </summary>
+    /// <remarks>
+    /// In current implementation, there are multiple important notes: <para/>
+    /// 1. This is not necessarily a unit vector. <para/>
+    /// 2. This is not the direction of actual enemy acceleration after collisions are factored in.
+    /// This is the direction in which an Enemy is currently trying to accelerate based on its EnemyBehaviours. <para/
+    /// 3. Initialized as a zero vector on frame 1 for most enemies.
+    /// </remarks>
+    protected Vector2 _acceleration_dir = Vector2.zero;
 
     /// <summary>
     /// Initializes Enemy's behaviours and other instance variables
@@ -70,10 +88,27 @@ public abstract class Enemy : MonoBehaviour {
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
     protected virtual bool PerformAction() {
-        if(this._behaviours.TryGetValue(this._state, out EnemyBehaviour action)) {
-            return action.Act();
+        if(this._behaviours.TryGetValue(this._state, out (EnemyBehaviour, Action) action)) {
+            bool return_val = action.Item1.Act(out this._acceleration_dir);
+            action.Item2();
+            return return_val;
         } else {
             throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
         }
     }
+
+    /// <summary>
+    /// Handles Enemy animations after performing an idle EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterIdleAnimate();
+
+    /// <summary>
+    /// Handles Enemy animations after performing an aware EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterAwareAnimate();
+
+    /// <summary>
+    /// Handles Enemy Animations after performing an engaged EnemyBehaviour
+    /// </summary>
+    protected abstract void AfterEngagedAnimate();
 }
