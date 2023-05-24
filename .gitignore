@@ -60,3 +60,7 @@ crashlytics-build.properties
 
 # Ignore user settings
 /UserSettings
+
+# Ignore Ez Define Symbols extension
+/[Aa]ssets/Ez*
+/[Aa]ssets/Plugins*
