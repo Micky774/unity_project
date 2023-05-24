@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// Enemy's level of involvement with the player
@@ -31,6 +32,16 @@ public class InvalidEnemyStateException : System.ArgumentException {
     /// </summary>
     /// <param name="message"> Error message </param>
     public InvalidEnemyStateException(string message) : base(message) { }
+}
+
+public struct EnemyData {
+    public EnemyBehaviour behaviour;
+    public Action animate;
+
+    public EnemyData(EnemyBehaviour inputBehaviour, Action inputAnimate) {
+        this.behaviour = inputBehaviour;
+        this.animate = inputAnimate;
+    }
 }
 
 /// <summary>

@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour {
     /// <summary>
     /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
-    protected IDictionary<ENEMY_STATE, (EnemyBehaviour, Action)> _behaviours = new Dictionary<ENEMY_STATE, (EnemyBehaviour, Action)>();
+    protected IDictionary<ENEMY_STATE, EnemyData> _behaviours = new Dictionary<ENEMY_STATE, EnemyData>();
 
     /// <summary>
     /// Enemy's current level of involvement with the player
@@ -88,9 +88,9 @@ public abstract class Enemy : MonoBehaviour {
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
     protected virtual bool PerformAction() {
-        if(this._behaviours.TryGetValue(this._state, out (EnemyBehaviour, Action) action)) {
-            bool return_val = action.Item1.Act(out this._acceleration_dir);
-            action.Item2();
+        if(this._behaviours.TryGetValue(this._state, out EnemyData data)) {
+            bool return_val = data.behaviour.Act(out this._acceleration_dir);
+            data.animate();
             return return_val;
         } else {
             throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
