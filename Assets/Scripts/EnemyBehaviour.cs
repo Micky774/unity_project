@@ -3,6 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 /// <summary>
 /// Enemy's level of involvement with the player
@@ -31,6 +32,33 @@ public class InvalidEnemyStateException : System.ArgumentException {
     /// </summary>
     /// <param name="message"> Error message </param>
     public InvalidEnemyStateException(string message) : base(message) { }
+}
+
+/// <summary>
+/// Stores an EnemyBehaviour and a corresponding animation function
+/// </summary>
+/// <remarks>
+/// We use this primarily for code readability in enemy implementations
+/// </remarks>
+public struct EnemyData {
+    /// <summary>
+    /// EnemyBehaviour to be performed
+    /// </summary>
+    public EnemyBehaviour behaviour;
+    /// <summary>
+    /// Function that handles Enemy animations
+    /// </summary>
+    public Action animate;
+
+    /// <summary>
+    /// Creates a new EnemyData
+    /// </summary>
+    /// <param name="inputBehaviour"> EnemyBehaviour to be stored </param>
+    /// <param name="inputAnimate"> Animation function to be stored </param>
+    public EnemyData(EnemyBehaviour inputBehaviour, Action inputAnimate) {
+        this.behaviour = inputBehaviour;
+        this.animate = inputAnimate;
+    }
 }
 
 /// <summary>

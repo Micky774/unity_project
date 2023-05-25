@@ -10,7 +10,7 @@ public abstract class Enemy : MonoBehaviour {
     /// <summary>
     /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
-    protected IDictionary<ENEMY_STATE, (EnemyBehaviour, Action)> _behaviours = new Dictionary<ENEMY_STATE, (EnemyBehaviour, Action)>();
+    protected IDictionary<ENEMY_STATE, EnemyData> _behaviours = new Dictionary<ENEMY_STATE, EnemyData>();
 
     // Variables for health and damage management
     protected int _max_health;
@@ -82,6 +82,16 @@ public abstract class Enemy : MonoBehaviour {
     /// Updates _state based on enemy-specific conditions
     /// </summary>
     protected abstract void UpdateState();
+    public void TakeDamage(int damage) {
+        _curr_health = Mathf.Clamp(_curr_health - damage, 0, _max_health);
+
+        if(_curr_health == 0){
+            OnDeath();
+        }
+    }
+    private void OnDeath() {
+        Destroy(gameObject);
+    }
 
     /// <summary>
     /// Performs the EnemyBehaviour for current physics tick based on _state
@@ -92,25 +102,13 @@ public abstract class Enemy : MonoBehaviour {
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
     protected virtual bool PerformAction() {
-        if(this._behaviours.TryGetValue(this._state, out (EnemyBehaviour, Action) action)) {
-            bool return_val = action.Item1.Act(out this._acceleration_dir);
-            action.Item2();
+        if(this._behaviours.TryGetValue(this._state, out EnemyData data)) {
+            bool return_val = data.behaviour.Act(out this._acceleration_dir);
+            data.animate();
             return return_val;
         } else {
             throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
         }
-    }
-
-    public void TakeDamage(int damage) {
-        _curr_health = Mathf.Clamp(_curr_health - damage, 0, _max_health);
-
-        if(_curr_health == 0){
-            OnDeath();
-        }
-    }    
-
-    private void OnDeath() {
-        Destroy(gameObject);
     }
 
     /// <summary>
