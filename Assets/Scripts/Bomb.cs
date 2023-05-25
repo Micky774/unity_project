@@ -13,14 +13,15 @@ public class Bomb : Enemy {
     /// Initial value for maximum speed at which Bomb can approach the player
     /// </summary>
     /// <remarks>
-    /// If you wish to tweak Bomb's max speed in the Inspector at runtime, alter max_speed variable from _awareBehaviour and _engagedBehaviour instead.
+    /// To tweak Bomb's max speed in the Inspector at runtime, alter _max_speed variable in EnemyBehaviours instead.
     /// </remarks>
     private const float _MAX_SPEED = 4;
+
     /// <summary>
     /// Initial value for magnitude of acceleration with which Bomb can approach the player
     /// </summary>
     /// <remarks>
-    /// If you wish to tweak Bomb's acceleration rate in the Inspector at runtime, alter acceleration_rate variable from _awareBehaviour and _engagedBehaviour instead.
+    /// To tweak Bomb's acceleration rate in the Inspector at runtime, alter acceleration_rate variable in EnemyBehaviours instead.
     /// </remarks>
     private const float _ACCELERATION_RATE = 1;
 

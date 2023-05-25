@@ -7,6 +7,7 @@ using System;
 /// Abstract class providing framework for Enemy design
 /// </summary>
 public abstract class Enemy : MonoBehaviour {
+    // TODO: Make custom serializable dictionary subclass
     /// <summary>
     /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
