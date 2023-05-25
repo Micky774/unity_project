@@ -36,7 +36,8 @@ public class Heart : MonoBehaviour {
     /// <remarks>
     /// Assigned in Inspector
     /// </remarks>
-    public Sprite filledHeart;
+    [SerializeField]
+    private Sprite _filledHeart;
 
     /// <summary>
     /// Sprite of an empty heart to represent a lost health point
@@ -44,7 +45,8 @@ public class Heart : MonoBehaviour {
     /// <remarks>
     /// Assigned in Inspector
     /// </remarks>
-    public Sprite emptyHeart;
+    [SerializeField]
+    private Sprite _emptyHeart;
 
     /// <summary>
     /// Initializes a Heart
@@ -64,10 +66,10 @@ public class Heart : MonoBehaviour {
     public void SetMode(HEART_MODE mode) {
         switch(mode) {
             case HEART_MODE.active:
-                this.GetComponent<Image>().sprite = filledHeart;
+                this.GetComponent<Image>().sprite = _filledHeart;
                 break;
             case HEART_MODE.inactive:
-                this.GetComponent<Image>().sprite = emptyHeart;
+                this.GetComponent<Image>().sprite = _emptyHeart;
                 break;
             case HEART_MODE.invisible:
                 this.GetComponent<CanvasRenderer>().SetAlpha(0f);

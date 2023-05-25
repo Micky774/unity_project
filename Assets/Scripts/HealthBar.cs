@@ -21,7 +21,8 @@ public class HealthBar : MonoBehaviour {
     /// <remarks>
     /// Assigned in Inspector
     /// </remarks>
-    public GameObject heartPrefab;
+    [SerializeField]
+    private GameObject _heartPrefab;
 
     // Variables instantiated during runtime
     private Heart[] _hearts = new Heart[_MAXIMUM_HEARTS];
@@ -41,7 +42,7 @@ public class HealthBar : MonoBehaviour {
     /// <summary>
     /// Initializes HealthBar members
     /// </summary>
-    void Start() {
+    protected void Start() {
         if(this._max_hearts > HealthBar._MAXIMUM_HEARTS) {
             this._max_hearts = HealthBar._MAXIMUM_HEARTS;
         }
@@ -49,7 +50,7 @@ public class HealthBar : MonoBehaviour {
         // Populates heart array up to index _max_hearts
         for(int idx = 0; idx < this._max_hearts; idx++) {
             this._hearts[idx] = (
-                Instantiate(this.heartPrefab, Vector3.zero, Quaternion.identity, this.transform)
+                Instantiate(this._heartPrefab, Vector3.zero, Quaternion.identity, this.transform)
                 .GetComponent<Heart>()
                 .Init(idx)
             );

@@ -16673,7 +16673,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4bde5b55de43f45abe89fcde609bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heartPrefab: {fileID: 7090338872273658561, guid: 56ebf39288d19154b8cc64cc3d10450b, type: 3}
+  _heartPrefab: {fileID: 7090338872273658561, guid: 56ebf39288d19154b8cc64cc3d10450b, type: 3}
   _max_hearts: 5
 --- !u!1 &2091613859
 GameObject:
