@@ -45,7 +45,7 @@ public struct EnemyData {
     /// EnemyBehaviour to be performed
     /// </summary>
     public EnemyBehaviour behaviour;
-    
+
     /// <summary>
     /// Function that handles Enemy animations
     /// </summary>
