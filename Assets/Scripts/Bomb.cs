@@ -16,6 +16,7 @@ public class Bomb : Enemy {
     /// If you wish to tweak Bomb's max speed in the Inspector at runtime, alter max_speed variable from _awareBehaviour and _engagedBehaviour instead.
     /// </remarks>
     private const float _MAX_SPEED = 4;
+    
     /// <summary>
     /// Initial value for magnitude of acceleration with which Bomb can approach the player
     /// </summary>

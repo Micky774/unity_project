@@ -45,6 +45,7 @@ public struct EnemyData {
     /// EnemyBehaviour to be performed
     /// </summary>
     public EnemyBehaviour behaviour;
+    
     /// <summary>
     /// Function that handles Enemy animations
     /// </summary>
@@ -161,14 +162,18 @@ public class ApproachTarget : EnemyBehaviour {
     /// Usually the player
     /// </remarks>
     protected Rigidbody2D _target;
+
     /// <summary>
     /// Maximum speed at which enemy can move
     /// </summary>
-    public float max_speed;
+    [SerializeField]
+    protected float _max_speed;
+
     /// <summary>
     /// Magnitude of enemy acceleration
     /// </summary>
-    public float acceleration_rate;
+    [SerializeField]
+    protected float _acceleration_rate;
 
     /// <summary>
     /// Constructs a new ApproachTarget behaviour
@@ -189,8 +194,8 @@ public class ApproachTarget : EnemyBehaviour {
 
         this._enemyBody = enemy.GetComponent<Rigidbody2D>();
         this._target = target;
-        this.max_speed = max_speed;
-        this.acceleration_rate = acceleration_rate;
+        this._max_speed = max_speed;
+        this._acceleration_rate = acceleration_rate;
     }
 
     /// <summary>
@@ -204,11 +209,11 @@ public class ApproachTarget : EnemyBehaviour {
 
         // Calculates change in velocity for current frame
         Vector2 delta_v = this._target.position - this._enemyBody.position;
-        delta_v *= time_step * this.acceleration_rate / delta_v.magnitude;
+        delta_v *= time_step * this._acceleration_rate / delta_v.magnitude;
         acceleration_dir = delta_v;
 
         // Adds change to enemy's velocity
-        this._enemyBody.velocity = Vector2.ClampMagnitude(this._enemyBody.velocity + delta_v, this.max_speed);
+        this._enemyBody.velocity = Vector2.ClampMagnitude(this._enemyBody.velocity + delta_v, this._max_speed);
 
         return true;
     }
