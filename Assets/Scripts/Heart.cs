@@ -1,35 +1,78 @@
+/// \file enum and class for individual hearts on HealthBar
+
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Heart : MonoBehaviour
-{
-    public Sprite filled_heart;
-    public Sprite empty_heart;
-    public Heart Init(int idx) {
-        name = "Heart" + idx;
-        GetComponent<RectTransform>().anchoredPosition = new Vector3(50f + 100f*idx, 0f, 0f);
-        return this;
-    }
-    public void SetMode(HEART_MODE mode) {
-        switch(mode){
-            case HEART_MODE.active:
-                GetComponent<Image>().sprite = filled_heart;
-                break;
-            case HEART_MODE.inactive:
-                GetComponent<Image>().sprite = empty_heart;
-                break;
-            case HEART_MODE.invisible:
-                GetComponent<CanvasRenderer>().SetAlpha(0f);
-                return;
-        } 
-        GetComponent<CanvasRenderer>().SetAlpha(1f);
-    }
+/// <summary>
+/// Possible display states a Heart can have
+/// </summary>
+public enum HEART_MODE {
+    /// <summary>
+    /// Heart represents an active health point
+    /// </summary>
+    active,
+    /// <summary>
+    /// Heart represents a lost health point
+    /// </summary>
+    inactive,
+    /// <summary>
+    /// Heart should not be displayed
+    /// </summary>
+    /// <remarks>
+    /// This is the case for Hearts beyond player max health
+    /// </remarks>
+    invisible,
 }
 
-public enum HEART_MODE{
-    active,
-    inactive,
-    invisible,
+/// <summary>
+/// Heart representing a health point on HealthBar
+/// </summary>
+public class Heart : MonoBehaviour {
+    /// <summary>
+    /// Sprite of a full heart to represent an existing health point
+    /// </summary>
+    /// <remarks>
+    /// Assigned in Inspector
+    /// </remarks>
+    public Sprite filledHeart;
+
+    /// <summary>
+    /// Sprite of an empty heart to represent a lost health point
+    /// </summary>
+    /// <remarks>
+    /// Assigned in Inspector
+    /// </remarks>
+    public Sprite emptyHeart;
+
+    /// <summary>
+    /// Initializes a Heart
+    /// </summary>
+    /// <param name="idx"> Index of Heart in HealthBar's underlying array </param>
+    /// <returns> Initialized Heart </returns>
+    public Heart Init(int idx) {
+        this.name = "Heart" + idx;
+        this.GetComponent<RectTransform>().anchoredPosition = new Vector3(50f + 100f * idx, 0f, 0f);
+        return this;
+    }
+
+    /// <summary>
+    /// Sets the display state of the Heart
+    /// </summary>
+    /// <param name="mode"> New display state </param>
+    public void SetMode(HEART_MODE mode) {
+        switch(mode) {
+            case HEART_MODE.active:
+                this.GetComponent<Image>().sprite = filledHeart;
+                break;
+            case HEART_MODE.inactive:
+                this.GetComponent<Image>().sprite = emptyHeart;
+                break;
+            case HEART_MODE.invisible:
+                this.GetComponent<CanvasRenderer>().SetAlpha(0f);
+                return;
+        }
+        this.GetComponent<CanvasRenderer>().SetAlpha(1f);
+    }
 }

@@ -3,30 +3,41 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-/*
- * Game over screen scripting.
- * Provides methods for displaying a game over screen and restarting the game from said screen.
- */
-public class GameOverScreen : MonoBehaviour
-{
-    public static float wait_time = 3f;
+/// <summary>
+/// Basic game over screen with restart button
+/// </summary>
+public class GameOverScreen : MonoBehaviour {
+    /// <summary>
+    /// Time between Display() call and GameOverScreen being displayed
+    /// </summary>
+    private const float _WAIT_TIME = 3f;
 
+    /// <summary>
+    /// Filename of the currently active scene
+    /// </summary>
     private string _scene_name;
 
-    // Displays game over screen after a short time
-    public IEnumerator Display() {
-        yield return new WaitForSeconds(wait_time);
+    /// <summary>
+    /// Displays the GameOverScreen after a brief delay
+    /// </summary>
+    /// <param name="delay"> Seconds before GameOverScreen is displayed </param>
+    /// <returns> IEnumerator corresponding to the Display coroutine </returns>
+    public IEnumerator Display(float delay = GameOverScreen._WAIT_TIME) {
+        yield return new WaitForSeconds(delay);
         this.gameObject.SetActive(true);
     }
 
-    void Start(){
+    /// <summary>
+    /// Retrieves and stores the filename of the current scene
+    /// </summary>
+    void Start() {
         this._scene_name = SceneManager.GetActiveScene().name;
     }
 
-    /* NOTE: Player's current fire action must be removed from PlayerInputs before this is called
-     * Otherwise, PlayerInputs retains reference to old Robo instance, causing errors.
-     */
-    public void Restart(){
+    /// <summary>
+    /// Restarts the scene
+    /// </summary>
+    public void Restart() {
         SceneManager.LoadScene(this._scene_name);
     }
 }

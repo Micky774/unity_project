@@ -15784,11 +15784,11 @@ MonoBehaviour:
   move_strength: 12
   max_speed: 18
   decay_rate: 12
-  invincibility_duration: 1.5
-  curr_health: 0
-  max_health: 5
-  health_bar: {fileID: 1911864076}
-  gameOver: {fileID: 985496118}
+  _invincibility_duration: 1.5
+  _curr_health: 0
+  _max_health: 5
+  _healthBar: {fileID: 1911864076}
+  _gameOver: {fileID: 985496118}
   projectileParent: {fileID: 2091613859}
 --- !u!61 &237373365
 BoxCollider2D:
@@ -16673,59 +16673,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd4bde5b55de43f45abe89fcde609bc5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  heart_prefab: {fileID: 7090338872273658561, guid: 56ebf39288d19154b8cc64cc3d10450b, type: 3}
-  hearts:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  max_hearts: 5
+  heartPrefab: {fileID: 7090338872273658561, guid: 56ebf39288d19154b8cc64cc3d10450b, type: 3}
+  _max_hearts: 5
 --- !u!1 &2091613859
 GameObject:
   m_ObjectHideFlags: 0

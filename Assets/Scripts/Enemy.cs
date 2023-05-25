@@ -12,8 +12,19 @@ public abstract class Enemy : MonoBehaviour {
     /// </summary>
     protected IDictionary<ENEMY_STATE, EnemyData> _behaviours = new Dictionary<ENEMY_STATE, EnemyData>();
 
-    // Variables for health and damage management
+    /// <summary>
+    /// Enemy's maximum health value
+    /// </summary>
+    /// <remarks>
+    /// Most enemies are initialized with max health
+    /// </remarks>
+    [SerializeField]
     protected int _max_health;
+
+    /// <summary>
+    /// Enemy's current health value
+    /// </summary>
+    [SerializeField]
     protected int _curr_health;
 
     /// <summary>
@@ -82,15 +93,24 @@ public abstract class Enemy : MonoBehaviour {
     /// Updates _state based on enemy-specific conditions
     /// </summary>
     protected abstract void UpdateState();
-    public void TakeDamage(int damage) {
-        _curr_health = Mathf.Clamp(_curr_health - damage, 0, _max_health);
 
-        if(_curr_health == 0){
-            OnDeath();
+    /// <summary>
+    /// Update's current health based on an attack suffered
+    /// </summary>
+    /// <param name="damage"> Damage caused by the attack </param>
+    public void TakeDamage(int damage) {
+        this._curr_health = Mathf.Clamp(this._curr_health - damage, 0, this._max_health);
+
+        if(this._curr_health == 0) {
+            this.OnDeath();
         }
     }
+
+    /// <summary>
+    /// Handles Enemy death
+    /// </summary>
     private void OnDeath() {
-        Destroy(gameObject);
+        Destroy(this.gameObject);
     }
 
     /// <summary>

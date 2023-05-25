@@ -24,9 +24,19 @@ public class Bomb : Enemy {
     /// </remarks>
     private const float _ACCELERATION_RATE = 1;
 
+    /// <summary>
+    /// Maximum health with which all Bombs are instantiated
+    /// </summary>
+    /// <remarks>
+    /// To tweak at runtime, change Bomb's _max_health variable instead
+    /// </remarks>
     private const int _MAX_HEALTH = 100;
 
-    private const int _DAMAGE = 1;
+    /// <summary>
+    /// Damage done by Bombs to player on contact
+    /// </summary>
+    [SerializeField]
+    private int _damage = 1;
 
     /// <summary>
     /// Player's Rigidbody2D
@@ -93,12 +103,16 @@ public class Bomb : Enemy {
         this._mySprite.flipX = this._acceleration_dir.x <= 0;
     }
 
+    /// <summary>
+    /// Damages Robo if a Bomb collides with them
+    /// </summary>
+    /// <param name="collision"> Details of collision </param>
     protected void OnCollisionStay2D(Collision2D collision) {
         ContactPoint2D contact = collision.contacts[0];
         GameObject hit_object = contact.collider.gameObject;
 
-        if(hit_object.tag == "Player"){
-            hit_object.GetComponent<Robo>().TakeDamage(_DAMAGE);
+        if(hit_object.tag == "Player") {
+            hit_object.GetComponent<Robo>().TakeDamage(this._damage);
         }
     }
 }
