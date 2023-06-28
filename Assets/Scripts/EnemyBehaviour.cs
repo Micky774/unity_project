@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 
 /// <summary>
 /// Enemy's level of involvement with the player
@@ -67,13 +68,9 @@ public struct EnemyData {
 /// </summary>
 public abstract class EnemyBehaviour {
     /// <summary>
-    /// Array storing information about intended use of the EnemyBehaviour in different ENEMY_STATEs
+    /// Array storing all valid ENEMY_STATEs in which the EnemyBehaviour is intended to be used
     /// </summary>
-    /// <remarks>
-    /// Given an ENEMY_STATE state, has the property that _use_case[(int)state] iff the EnemyBehaviour is designed for use with state.
-    /// An EnemyBehaviour is not designed for use with any state by default, so _use_case is initialized as all false.
-    /// </remarks>
-    protected bool[] _use_case = new bool[3];
+    protected ENEMY_STATE[] _use_cases;
 
     /// <summary>
     /// Enemy's Rigidbody2D
@@ -88,19 +85,9 @@ public abstract class EnemyBehaviour {
     protected void _CheckUseCase(ENEMY_STATE? state) {
         if(
             state is ENEMY_STATE state_val
-            && !this._use_case[(int)state_val]
+            && !_use_cases.Contains(state_val)
         ) {
             throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state.");
-        }
-    }
-
-    /// <summary>
-    /// Sets intended use cases for an EnemyBehaviour
-    /// </summary>
-    /// <param name="states"> ENEMY_STATES in which the EnemyBehaviour is intended to be used</param>
-    protected void _SetUseCase(params ENEMY_STATE[] states) {
-        foreach(ENEMY_STATE state in states) {
-            this._use_case[(int)state] = true;
         }
     }
 
@@ -125,7 +112,7 @@ public class DoNothing : EnemyBehaviour {
     /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
     public DoNothing(Enemy enemy, ENEMY_STATE? state) {
-        this._SetUseCase(ENEMY_STATE.idle, ENEMY_STATE.aware);
+        this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.idle, ENEMY_STATE.aware };
 
         try {
             this._CheckUseCase(state);
@@ -184,7 +171,7 @@ public class ApproachTarget : EnemyBehaviour {
     /// <param name="acceleration_rate"> Magnitude of Enemy acceleration </param>
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
     public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
-        this._SetUseCase(ENEMY_STATE.aware, ENEMY_STATE.engaged);
+        this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.aware, ENEMY_STATE.engaged };
 
         try {
             this._CheckUseCase(state);
