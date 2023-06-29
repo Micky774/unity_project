@@ -51,7 +51,7 @@ public abstract class Enemy : MonoBehaviour {
     /// This is the direction in which an Enemy is currently trying to accelerate based on its EnemyBehaviours. <para/
     /// 3. Initialized as a zero vector on frame 1 for most enemies.
     /// </remarks>
-    protected Vector2 _acceleration_dir = Vector2.zero;
+    protected Vector2 _unscaled_acc = Vector2.zero;
 
     /// <summary>
     /// Initializes Enemy's behaviours and other instance variables
@@ -90,7 +90,7 @@ public abstract class Enemy : MonoBehaviour {
     /// </remarks>
     protected virtual bool PerformAction() {
         if(this._behaviours.TryGetValue(this._state, out EnemyData data)) {
-            bool return_val = data.behaviour.Act(out this._acceleration_dir);
+            bool return_val = data.behaviour.Act(out this._unscaled_acc);
             data.animate();
             return return_val;
         } else {

@@ -79,13 +79,13 @@ public class Bomb : Enemy {
     /// Flips Bomb's sprite to match horizontal acceleration
     /// </summary>
     protected override void AfterAwareAnimate() {
-        this._mySprite.flipX = this._acceleration_dir.x <= 0;
+        this._mySprite.flipX = this._unscaled_acc.x <= 0;
     }
 
     /// <summary>
     /// Flips Bomb's sprite to match horizontal acceleration
     /// </summary>
     protected override void AfterEngagedAnimate() {
-        this._mySprite.flipX = this._acceleration_dir.x <= 0;
+        this._mySprite.flipX = this._unscaled_acc.x <= 0;
     }
 }

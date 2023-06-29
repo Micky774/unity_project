@@ -93,9 +93,9 @@ public abstract class EnemyBehaviour {
     /// <summary>
     /// Performs the next frame of action required for an EnemyBehaviour
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
-    public abstract bool Act(out Vector2 acceleration_dir);
+    public abstract bool Act(out Vector2 unscaled_acc);
 }
 
 /// <summary>
@@ -120,10 +120,10 @@ public class DoNothing : EnemyBehaviour {
     /// <summary>
     /// Sets the Enemy's velocity to zero on the current frame
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> true </returns>
-    public override bool Act(out Vector2 acceleration_dir) {
-        acceleration_dir = -this._enemyBody.velocity;
+    public override bool Act(out Vector2 unscaled_acc) {
+        unscaled_acc = -this._enemyBody.velocity;
         this._enemyBody.velocity = Vector2.zero;
         return true;
     }
@@ -177,16 +177,16 @@ public class ApproachTarget : EnemyBehaviour {
     /// <summary>
     /// Increases Enemy's velocity in direction of _target
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> true </returns>
-    public override bool Act(out Vector2 acceleration_dir) {
+    public override bool Act(out Vector2 unscaled_acc) {
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
         // Calculates change in velocity for current frame
         Vector2 delta_v = this._target.position - this._enemyBody.position;
         delta_v *= time_step * this._acceleration_rate / delta_v.magnitude;
-        acceleration_dir = delta_v;
+        unscaled_acc = delta_v;
 
         // Adds change to enemy's velocity
         this._enemyBody.velocity = Vector2.ClampMagnitude(this._enemyBody.velocity + delta_v, this._max_speed);
