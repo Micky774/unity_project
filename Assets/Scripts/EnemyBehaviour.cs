@@ -190,7 +190,7 @@ public class ApproachTarget : EnemyBehaviour {
 
         // Calculates change in velocity for current frame
         Vector2 delta_v = this._target.position - this._enemyBody.position;
-        delta_v *= time_step * this._acceleration_rate / delta_v.magnitude;
+        delta_v = time_step * this._acceleration_rate * (delta_v / delta_v.magnitude);
         unscaled_acc = delta_v;
 
         // Adds change to enemy's velocity
