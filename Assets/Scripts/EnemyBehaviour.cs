@@ -87,7 +87,7 @@ public abstract class EnemyBehaviour {
             state is ENEMY_STATE state_val
             && !_use_cases.Contains(state_val)
         ) {
-            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state.");
+            Debug.LogException(new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state."));
         }
     }
 
@@ -113,12 +113,7 @@ public class DoNothing : EnemyBehaviour {
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
     public DoNothing(Enemy enemy, ENEMY_STATE? state) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.idle, ENEMY_STATE.aware };
-
-        try {
-            this._CheckUseCase(state);
-        } catch(InvalidEnemyStateException ex) {
-            Debug.LogException(ex);
-        }
+        this._CheckUseCase(state);
 
         this._enemyBody = enemy.GetComponent<Rigidbody2D>();
     }
@@ -172,12 +167,7 @@ public class ApproachTarget : EnemyBehaviour {
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
     public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.aware, ENEMY_STATE.engaged };
-
-        try {
-            this._CheckUseCase(state);
-        } catch(InvalidEnemyStateException ex) {
-            Debug.LogException(ex);
-        }
+        this._CheckUseCase(state);
 
         this._enemyBody = enemy.GetComponent<Rigidbody2D>();
         this._target = target;
