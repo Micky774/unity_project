@@ -78,6 +78,14 @@ public abstract class EnemyBehaviour {
     protected Rigidbody2D _enemyBody;
 
     /// <summary>
+    /// Basic EnemyBehaviour constructor to perform operations necessary for all subclasses
+    /// </summary>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the EnemyBehaviour </param>
+    protected EnemyBehaviour(Rigidbody2D enemyBody) {
+        this._enemyBody = enemyBody;
+    }
+
+    /// <summary>
     /// Checks if an ENEMY_STATE is an intended use case for the EnemyBehaviour
     /// </summary>
     /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
@@ -108,13 +116,11 @@ public class DoNothing : EnemyBehaviour {
     /// <summary>
     /// Constructs a new DoNothing behaviour
     /// </summary>
-    /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the DoNothing behaviour </param>
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
-    public DoNothing(Enemy enemy, ENEMY_STATE? state) {
+    public DoNothing(Rigidbody2D enemyBody, ENEMY_STATE? state) : base(enemyBody) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.idle, ENEMY_STATE.aware };
         this._CheckUseCase(state);
-
-        this._enemyBody = enemy.GetComponent<Rigidbody2D>();
     }
 
     /// <summary>
@@ -159,16 +165,15 @@ public class ApproachTarget : EnemyBehaviour {
     /// <summary>
     /// Constructs a new ApproachTarget behaviour
     /// </summary>
-    /// <param name="enemy"> Enemy who will use the behaviour </param>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the behaviour </param>
     /// <param name="target"> Target that the Enemy will approach (e.g. the player character) </param>
     /// <param name="max_speed"> Maximum speed at which Enemy can move </param>
     /// <param name="acceleration_rate"> Magnitude of Enemy acceleration </param>
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
-    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
+    public ApproachTarget(Rigidbody2D enemyBody, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) : base(enemyBody) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.aware, ENEMY_STATE.engaged };
         this._CheckUseCase(state);
 
-        this._enemyBody = enemy.GetComponent<Rigidbody2D>();
         this._target = target;
         this._max_speed = max_speed;
         this._acceleration_rate = acceleration_rate;
