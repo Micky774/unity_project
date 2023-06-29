@@ -81,7 +81,6 @@ public abstract class EnemyBehaviour {
     /// Checks if an ENEMY_STATE is an intended use case for the EnemyBehaviour
     /// </summary>
     /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
-    /// <exception cref="InvalidEnemyStateException"> Thrown if state is not an intended use case for the EnemyBehaviour </exception>
     protected void _CheckUseCase(ENEMY_STATE? state) {
         if(
             state is ENEMY_STATE state_val
