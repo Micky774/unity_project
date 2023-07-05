@@ -6,11 +6,21 @@ using System;
 /// <summary>
 /// Abstract class providing framework for Enemy design
 /// </summary>
+/// <remarks>
+/// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
+/// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+/// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
+/// </remarks>
 public abstract class Enemy : MonoBehaviour {
     // TODO: Make custom serializable dictionary subclass
     /// <summary>
     /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
+    /// <remarks>
+    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
+    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
+    /// </remarks>
     protected IDictionary<ENEMY_STATE, EnemyData> _behaviours = new Dictionary<ENEMY_STATE, EnemyData>();
 
     /// <summary>
@@ -48,8 +58,8 @@ public abstract class Enemy : MonoBehaviour {
     /// In current implementation, there are multiple important notes: <para/>
     /// 1. This is not necessarily a unit vector. <para/>
     /// 2. This is not the direction of actual enemy acceleration after collisions are factored in.
-    /// This is the direction in which an Enemy is currently trying to accelerate based on its EnemyBehaviours. <para/
-    /// 3. Initialized as a zero vector on frame 1 for most enemies.
+    /// This is the direction in which an Enemy is currently trying to accelerate based on its EnemyBehaviours. <para/>
+    /// 3. This is initialized as a zero vector on frame 1 for most enemies.
     /// </remarks>
     protected Vector2 _unscaled_acc = Vector2.zero;
 
@@ -57,7 +67,9 @@ public abstract class Enemy : MonoBehaviour {
     /// Initializes Enemy's behaviours and other instance variables
     /// </summary>
     /// <remarks>
-    /// Runs on the first frame a script is enabled before Update is called
+    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
+    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
     /// </remarks>
     protected abstract void Start();
 
@@ -65,14 +77,17 @@ public abstract class Enemy : MonoBehaviour {
     /// Determines Enemy's _state and performs corresponding action for current physics tick
     /// </summary>
     /// <remarks>
-    /// Enemies should be synced to the physics tickrate because they're physics objects.
+    /// Enemy expects that when FixedUpdate() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
+    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned. <para/>
+    /// Enemies should be synced to the physics tickrate because they're physics objects. <para/>
     /// Virtual to allow overriding by custom non-state-based Enemies (such as bosses, potentially).
     /// </remarks>
     protected virtual void FixedUpdate() {
         if(this._can_change_state) {
             this.UpdateState();
         }
-        this._can_change_state = this.PerformAction();
+        this._can_change_state = this.Act();
     }
 
     /// <summary>
@@ -81,21 +96,23 @@ public abstract class Enemy : MonoBehaviour {
     protected abstract void UpdateState();
 
     /// <summary>
-    /// Performs the EnemyBehaviour for current physics tick based on _state
+    /// Performs the EnemyBehaviour for current physics tick based on _state and corresponding animation Action
     /// </summary>
     /// <returns> Whether Enemy can change _state on the next frame </returns>
     /// <exception cref="InvalidEnemyStateException"> Thrown if Enemy does not have an EnemyBehaviour associated with _state </exception>
     /// <remarks>
+    /// Enemy expects that when Act() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
+    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned. <para/>
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
-    protected virtual bool PerformAction() {
-        if(this._behaviours.TryGetValue(this._state, out EnemyData data)) {
-            bool return_val = data.Act(out this._unscaled_acc);
-            data.animate();
-            return return_val;
-        } else {
-            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " has no behaviour defined for " + this._state + " state.");
-        }
+    protected virtual bool Act() {
+        // Note that we assume that this._behaviours contains a value corresponding to key this._state
+        EnemyData data = this._behaviours[this._state];
+        
+        bool return_val = data.Act(out this._unscaled_acc);
+        data.Animate();
+        return return_val;
     }
 
     /// <summary>

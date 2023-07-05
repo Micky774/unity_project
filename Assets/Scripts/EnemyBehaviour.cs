@@ -50,16 +50,16 @@ public struct EnemyData {
     /// <summary>
     /// Function that handles Enemy animations
     /// </summary>
-    public Action animate;
+    public Action Animate;
 
     /// <summary>
     /// Creates a new EnemyData
     /// </summary>
     /// <param name="inputBehaviour"> EnemyBehaviour to be stored </param>
     /// <param name="inputAnimate"> Animation function to be stored </param>
-    public EnemyData(EnemyBehaviour inputBehaviour, Action inputAnimate) {
+    public EnemyData(EnemyBehaviour inputBehaviour, Action InputAnimate) {
         this.behaviour = inputBehaviour;
-        this.animate = inputAnimate;
+        this.Animate = InputAnimate;
     }
 
     /// <summary>

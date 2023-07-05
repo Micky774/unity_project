@@ -33,11 +33,15 @@ public class Bomb : Enemy {
     /// <summary>
     /// Sets instance variables such that Bomb does nothing when idle and approaches player otherwise
     /// </summary>
+    /// <remarks>
+    /// By the end of the Start() method, as required by Enemy, we ensure that every ENEMY_STATE Bomb achieves has a corresponding EnemyData in _behaviours
+    /// </remarks>
     protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._mySprite = this.GetComponent<SpriteRenderer>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
 
+        // Bomb is designed to achieve the idle, aware, and engaged ENEMY_STATEs, so we make behaviours corresponding to each
         EnemyBehaviour idleBehaviour = new DoNothing(this._myRigidbody, ENEMY_STATE.idle);
         EnemyBehaviour awareBehaviour = new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware);
         EnemyBehaviour engagedBehaviour = new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged);
@@ -46,6 +50,7 @@ public class Bomb : Enemy {
         EnemyData awareData = new EnemyData(awareBehaviour, AfterAwareAnimate);
         EnemyData engagedData = new EnemyData(engagedBehaviour, AfterEngagedAnimate);
 
+        // IMPORTANT: This section populates _behaviours with a valid EnemyData for each ENEMY_STATE value Bomb achieves.
         this._behaviours.Add(ENEMY_STATE.idle, idleData);
         this._behaviours.Add(ENEMY_STATE.aware, awareData);
         this._behaviours.Add(ENEMY_STATE.engaged, engagedData);
@@ -55,6 +60,7 @@ public class Bomb : Enemy {
     /// Sets Bomb's _state based on its distance from the player
     /// </summary>
     /// <remarks>
+    /// By the end of the UpdateState() method, as required by Enemy, there is an EnemyData in _behaviours corresponding to _state. <para/>
     /// Bomb is idle when at least 100 units from player, aware when at least 50 but less than 100 units from player, and engaged when less than 50 units from player.
     /// </remarks>
     protected override void UpdateState() {
