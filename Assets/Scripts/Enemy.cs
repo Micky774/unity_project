@@ -96,7 +96,7 @@ public abstract class Enemy : MonoBehaviour {
     protected abstract void UpdateState();
 
     /// <summary>
-    /// Performs the EnemyBehaviour for current physics tick based on _state and corresponding animation Action
+    /// Performs the EnemyBehaviour and corresponding Animation action for current physics tick based on _state
     /// </summary>
     /// <returns> Whether Enemy can change _state on the next frame </returns>
     /// <exception cref="InvalidEnemyStateException"> Thrown if Enemy does not have an EnemyBehaviour associated with _state </exception>
