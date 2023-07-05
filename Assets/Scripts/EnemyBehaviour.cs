@@ -50,16 +50,25 @@ public struct EnemyData {
     /// <summary>
     /// Function that handles Enemy animations
     /// </summary>
-    public Action animate;
+    public Action Animate;
 
     /// <summary>
     /// Creates a new EnemyData
     /// </summary>
     /// <param name="inputBehaviour"> EnemyBehaviour to be stored </param>
     /// <param name="inputAnimate"> Animation function to be stored </param>
-    public EnemyData(EnemyBehaviour inputBehaviour, Action inputAnimate) {
+    public EnemyData(EnemyBehaviour inputBehaviour, Action InputAnimate) {
         this.behaviour = inputBehaviour;
-        this.animate = inputAnimate;
+        this.Animate = InputAnimate;
+    }
+
+    /// <summary>
+    /// Exposes behaviour's Act method
+    /// </summary>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
+    /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
+    public bool Act(out Vector2 unscaled_acc) {
+        return this.behaviour.Act(out unscaled_acc);
     }
 }
 
@@ -78,25 +87,32 @@ public abstract class EnemyBehaviour {
     protected Rigidbody2D _enemyBody;
 
     /// <summary>
+    /// Basic EnemyBehaviour constructor to perform operations necessary for all subclasses
+    /// </summary>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the EnemyBehaviour </param>
+    protected EnemyBehaviour(Rigidbody2D enemyBody) {
+        this._enemyBody = enemyBody;
+    }
+
+    /// <summary>
     /// Checks if an ENEMY_STATE is an intended use case for the EnemyBehaviour
     /// </summary>
     /// <param name="state"> The ENEMY_STATE in which the EnemyBehaviour will be used by an Enemy. Can be set to null to skip check. </param>
-    /// <exception cref="InvalidEnemyStateException"> Thrown if state is not an intended use case for the EnemyBehaviour </exception>
     protected void _CheckUseCase(ENEMY_STATE? state) {
         if(
             state is ENEMY_STATE state_val
             && !_use_cases.Contains(state_val)
         ) {
-            throw new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state.");
+            Debug.LogException(new InvalidEnemyStateException("INVALID ENEMY STATE ERROR: " + this.GetType() + " does not support " + state_val.ToString() + " enemy state."));
         }
     }
 
     /// <summary>
     /// Performs the next frame of action required for an EnemyBehaviour
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
-    public abstract bool Act(out Vector2 acceleration_dir);
+    public abstract bool Act(out Vector2 unscaled_acc);
 }
 
 /// <summary>
@@ -109,27 +125,20 @@ public class DoNothing : EnemyBehaviour {
     /// <summary>
     /// Constructs a new DoNothing behaviour
     /// </summary>
-    /// <param name="enemy"> Enemy who will use the DoNothing behaviour </param>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the DoNothing behaviour </param>
     /// <param name="state"> ENEMY_STATE in which the DoNothing behaviour will be used. Null to skip use-case checking </param>
-    public DoNothing(Enemy enemy, ENEMY_STATE? state) {
+    public DoNothing(Rigidbody2D enemyBody, ENEMY_STATE? state) : base(enemyBody) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.idle, ENEMY_STATE.aware };
-
-        try {
-            this._CheckUseCase(state);
-        } catch(InvalidEnemyStateException ex) {
-            Debug.LogException(ex);
-        }
-
-        this._enemyBody = enemy.GetComponent<Rigidbody2D>();
+        this._CheckUseCase(state);
     }
 
     /// <summary>
     /// Sets the Enemy's velocity to zero on the current frame
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> true </returns>
-    public override bool Act(out Vector2 acceleration_dir) {
-        acceleration_dir = -this._enemyBody.velocity;
+    public override bool Act(out Vector2 unscaled_acc) {
+        unscaled_acc = -this._enemyBody.velocity;
         this._enemyBody.velocity = Vector2.zero;
         return true;
     }
@@ -165,21 +174,15 @@ public class ApproachTarget : EnemyBehaviour {
     /// <summary>
     /// Constructs a new ApproachTarget behaviour
     /// </summary>
-    /// <param name="enemy"> Enemy who will use the behaviour </param>
+    /// <param name="enemyBody"> Rigidbody2D of Enemy who will use the behaviour </param>
     /// <param name="target"> Target that the Enemy will approach (e.g. the player character) </param>
     /// <param name="max_speed"> Maximum speed at which Enemy can move </param>
     /// <param name="acceleration_rate"> Magnitude of Enemy acceleration </param>
     /// <param name="state"> ENEMY_STATE in which the behaviour will be used. Null to skip use-case checking </param>
-    public ApproachTarget(Enemy enemy, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) {
+    public ApproachTarget(Rigidbody2D enemyBody, Rigidbody2D target, float max_speed, float acceleration_rate, ENEMY_STATE? state) : base(enemyBody) {
         this._use_cases = new ENEMY_STATE[] { ENEMY_STATE.aware, ENEMY_STATE.engaged };
+        this._CheckUseCase(state);
 
-        try {
-            this._CheckUseCase(state);
-        } catch(InvalidEnemyStateException ex) {
-            Debug.LogException(ex);
-        }
-
-        this._enemyBody = enemy.GetComponent<Rigidbody2D>();
         this._target = target;
         this._max_speed = max_speed;
         this._acceleration_rate = acceleration_rate;
@@ -188,16 +191,16 @@ public class ApproachTarget : EnemyBehaviour {
     /// <summary>
     /// Increases Enemy's velocity in direction of _target
     /// </summary>
-    /// <param name="acceleration_dir"> Vector in direction of current Enemy acceleration </param>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
     /// <returns> true </returns>
-    public override bool Act(out Vector2 acceleration_dir) {
+    public override bool Act(out Vector2 unscaled_acc) {
         // Used to normalize updates across various frame-rates
         float time_step = Time.fixedDeltaTime;
 
         // Calculates change in velocity for current frame
         Vector2 delta_v = this._target.position - this._enemyBody.position;
-        delta_v *= time_step * this._acceleration_rate / delta_v.magnitude;
-        acceleration_dir = delta_v;
+        delta_v = time_step * this._acceleration_rate * (delta_v / delta_v.magnitude);
+        unscaled_acc = delta_v;
 
         // Adds change to enemy's velocity
         this._enemyBody.velocity = Vector2.ClampMagnitude(this._enemyBody.velocity + delta_v, this._max_speed);
