@@ -37,12 +37,18 @@ public class Bomb : Enemy {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._mySprite = this.GetComponent<SpriteRenderer>();
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
-        EnemyData idleBehaviour = new EnemyData(new DoNothing(this._myRigidbody, ENEMY_STATE.idle), AfterIdleAnimate),
-                  awareBehaviour = new EnemyData(new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware), AfterAwareAnimate),
-                  engagedBehaviour = new EnemyData(new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged), AfterEngagedAnimate);
-        this._behaviours.Add(ENEMY_STATE.idle, idleBehaviour);
-        this._behaviours.Add(ENEMY_STATE.aware, awareBehaviour);
-        this._behaviours.Add(ENEMY_STATE.engaged, engagedBehaviour);
+
+        EnemyBehaviour idleBehaviour = new DoNothing(this._myRigidbody, ENEMY_STATE.idle);
+        EnemyBehaviour awareBehaviour = new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.aware);
+        EnemyBehaviour engagedBehaviour = new ApproachTarget(this._myRigidbody, this._player, Bomb._MAX_SPEED, Bomb._ACCELERATION_RATE, ENEMY_STATE.engaged);
+
+        EnemyData idleData = new EnemyData(idleBehaviour, AfterIdleAnimate);
+        EnemyData awareData = new EnemyData(awareBehaviour, AfterAwareAnimate);
+        EnemyData engagedData = new EnemyData(engagedBehaviour, AfterEngagedAnimate);
+
+        this._behaviours.Add(ENEMY_STATE.idle, idleData);
+        this._behaviours.Add(ENEMY_STATE.aware, awareData);
+        this._behaviours.Add(ENEMY_STATE.engaged, engagedData);
     }
 
     /// <summary>
