@@ -61,6 +61,15 @@ public struct EnemyData {
         this.behaviour = inputBehaviour;
         this.animate = inputAnimate;
     }
+
+    /// <summary>
+    /// Exposes behaviour's Act method
+    /// </summary>
+    /// <param name="unscaled_acc"> Vector in direction of current Enemy acceleration </param>
+    /// <returns> Whether behaviour can be interrupted on the next frame by a change of ENEMY_STATE </returns>
+    public bool Act(out Vector2 unscaled_acc) {
+        return this.behaviour.Act(out unscaled_acc);
+    }
 }
 
 /// <summary>

@@ -90,7 +90,7 @@ public abstract class Enemy : MonoBehaviour {
     /// </remarks>
     protected virtual bool PerformAction() {
         if(this._behaviours.TryGetValue(this._state, out EnemyData data)) {
-            bool return_val = data.behaviour.Act(out this._unscaled_acc);
+            bool return_val = data.Act(out this._unscaled_acc);
             data.animate();
             return return_val;
         } else {
