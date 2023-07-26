@@ -34,7 +34,7 @@ public class Bomb : Enemy {
     /// Sets instance variables such that Bomb does nothing when idle and approaches player otherwise
     /// </summary>
     /// <remarks>
-    /// By the end of the Start() method, as required by Enemy, we ensure that every ENEMY_STATE Bomb achieves has a corresponding EnemyData in _behaviours
+    /// By the end of the Start() method, as required by Enemy, we ensure that every ENEMY_STATE Bomb may achieve during its lifetime has a corresponding EnemyData in _behaviours
     /// </remarks>
     protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
@@ -50,7 +50,7 @@ public class Bomb : Enemy {
         EnemyData awareData = new EnemyData(awareBehaviour, AfterAwareAnimate);
         EnemyData engagedData = new EnemyData(engagedBehaviour, AfterEngagedAnimate);
 
-        // IMPORTANT: This section populates _behaviours with a valid EnemyData for each ENEMY_STATE value Bomb achieves.
+        // IMPORTANT: This section populates _behaviours with a valid EnemyData for each ENEMY_STATE value Bomb may achieve
         this._behaviours.Add(ENEMY_STATE.idle, idleData);
         this._behaviours.Add(ENEMY_STATE.aware, awareData);
         this._behaviours.Add(ENEMY_STATE.engaged, engagedData);
@@ -60,7 +60,7 @@ public class Bomb : Enemy {
     /// Sets Bomb's _state based on its distance from the player
     /// </summary>
     /// <remarks>
-    /// By the end of the UpdateState() method, as required by Enemy, there is an EnemyData in _behaviours corresponding to _state. <para/>
+    /// By the end of the UpdateState() method, as required by Enemy, there is an EnemyData in _behaviours corresponding to each _state Bomb may achieve during its lifetime. <para/>
     /// Bomb is idle when at least 100 units from player, aware when at least 50 but less than 100 units from player, and engaged when less than 50 units from player.
     /// </remarks>
     protected override void UpdateState() {
