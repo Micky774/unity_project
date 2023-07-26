@@ -7,8 +7,8 @@ using System;
 /// Abstract class providing framework for Enemy design
 /// </summary>
 /// <remarks>
-/// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
-/// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+/// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state may achieve during an Enemy object's lifetime. <para/>
+/// Achievable ENEMY_STATEs may vary by Enemy subclass. <para/>
 /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
 /// </remarks>
 public abstract class Enemy : MonoBehaviour {
@@ -17,8 +17,8 @@ public abstract class Enemy : MonoBehaviour {
     /// Dictionary of EnemyBehaviours and animation functions to be used by Enemy in associated ENEMY_STATE
     /// </summary>
     /// <remarks>
-    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
-    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state may achieve during an Enemy object's lifetime. <para/>
+    /// Achievable ENEMY_STATEs may vary by Enemy subclass. <para/>
     /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
     /// </remarks>
     protected IDictionary<ENEMY_STATE, EnemyData> _behaviours = new Dictionary<ENEMY_STATE, EnemyData>();
@@ -82,18 +82,19 @@ public abstract class Enemy : MonoBehaviour {
     /// Initializes Enemy's behaviours and other instance variables
     /// </summary>
     /// <remarks>
-    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
-    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Enemy expects that, after the end of the Start() method, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state may achieve during an Enemy object's lifetime. <para/>
+    /// Achievable ENEMY_STATEs may vary by Enemy subclass. <para/>
     /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned.
     /// </remarks>
     protected abstract void Start();
+
 
     /// <summary>
     /// Determines Enemy's _state and performs corresponding action for current physics tick
     /// </summary>
     /// <remarks>
-    /// Enemy expects that when FixedUpdate() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
-    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Enemy expects that when FixedUpdate() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state may achieve during an Enemy object's lifetime. <para/>
+    /// Achievable ENEMY_STATEs may vary by Enemy subclass. <para/>
     /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned. <para/>
     /// Enemies should be synced to the physics tickrate because they're physics objects. <para/>
     /// Virtual to allow overriding by custom non-state-based Enemies (such as bosses, potentially).
@@ -106,10 +107,11 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     /// <summary>
-    /// Updates _state based on enemy-specific conditions
+    /// Handles Enemy death
     /// </summary>
-    protected abstract void UpdateState();
-
+    private void OnDeath() {
+        Destroy(this.gameObject);
+    }
     /// <summary>
     /// Update's current health based on an attack suffered
     /// </summary>
@@ -123,11 +125,9 @@ public abstract class Enemy : MonoBehaviour {
     }
 
     /// <summary>
-    /// Handles Enemy death
+    /// Updates _state based on enemy-specific conditions
     /// </summary>
-    private void OnDeath() {
-        Destroy(this.gameObject);
-    }
+    protected abstract void UpdateState();
 
     /// <summary>
     /// Performs the EnemyBehaviour and corresponding Animation action for current physics tick based on _state
@@ -135,8 +135,8 @@ public abstract class Enemy : MonoBehaviour {
     /// <returns> Whether Enemy can change _state on the next frame </returns>
     /// <exception cref="InvalidEnemyStateException"> Thrown if Enemy does not have an EnemyBehaviour associated with _state </exception>
     /// <remarks>
-    /// Enemy expects that when Act() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state achieves. <para/>
-    /// Achievable ENEMY_STATEs will vary by Enemy subclass. <para/>
+    /// Enemy expects that when Act() is called, _behaviours contains a valid EnemyData for each ENEMY_STATE value that _state may achieve during an Enemy object's lifetime. <para/>
+    /// Achievable ENEMY_STATEs may vary by Enemy subclass. <para/>
     /// Note that this EnemyData is mutable and can be changed during the Enemy's lifetime, but it must always have a fully functional EnemyData assigned. <para/>
     /// Virtual to allow overriding by custom non-state-based enemies (such as bosses, potentially)
     /// </remarks>
