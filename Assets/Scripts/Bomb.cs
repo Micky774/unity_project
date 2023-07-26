@@ -25,6 +25,12 @@ public class Bomb : Enemy {
     /// </remarks>
     private const float _ACCELERATION_RATE = 1;
 
+    [SerializeField]
+    private float _engaged_dist = 50;
+
+    [SerializeField]
+    private float _aware_dist = 100;
+
     /// <summary>
     /// Player's Rigidbody2D
     /// </summary>
@@ -66,9 +72,9 @@ public class Bomb : Enemy {
     protected override void UpdateState() {
         float dist_to_player = (this._myRigidbody.position - this._player.position).magnitude;
         ENEMY_STATE state = ENEMY_STATE.idle;
-        if(dist_to_player < 50) {
+        if(dist_to_player < _engaged_dist) {
             state = ENEMY_STATE.engaged;
-        } else if(dist_to_player < 100) {
+        } else if(dist_to_player < _aware_dist) {
             state = ENEMY_STATE.aware;
         }
         this._state = state;
