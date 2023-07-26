@@ -25,6 +25,20 @@ public class Bomb : Enemy {
     /// </remarks>
     private const float _ACCELERATION_RATE = 1;
 
+    /// <summary>
+    /// Maximum health with which all Bombs are instantiated
+    /// </summary>
+    /// <remarks>
+    /// To tweak at runtime, change Bomb's _max_health variable instead
+    /// </remarks>
+    private const int _MAX_HEALTH = 100;
+
+    /// <summary>
+    /// Damage done by Bombs to player on contact
+    /// </summary>
+    [SerializeField]
+    private int _damage = 1;
+
     [SerializeField]
     private float _engaged_dist = 50;
 
@@ -45,6 +59,7 @@ public class Bomb : Enemy {
     protected override void Start() {
         this._myRigidbody = this.GetComponent<Rigidbody2D>();
         this._mySprite = this.GetComponent<SpriteRenderer>();
+        this._curr_health = this._max_health = _MAX_HEALTH;
         this._player = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody2D>();
 
         // Bomb is designed to achieve the idle, aware, and engaged ENEMY_STATEs, so we make behaviours corresponding to each
@@ -105,5 +120,18 @@ public class Bomb : Enemy {
     /// </summary>
     protected override void AfterEngagedAnimate() {
         this._mySprite.flipX = this._unscaled_acc.x <= 0;
+    }
+    
+    /// <summary>
+    /// Damages Robo if a Bomb collides with them
+    /// </summary>
+    /// <param name="collision"> Details of collision </param>
+    protected void OnCollisionStay2D(Collision2D collision) {
+        ContactPoint2D contact = collision.contacts[0];
+        GameObject hit_object = contact.collider.gameObject;
+
+        if(hit_object.tag == "Player") {
+            hit_object.GetComponent<Robo>().TakeDamage(this._damage);
+        }
     }
 }
